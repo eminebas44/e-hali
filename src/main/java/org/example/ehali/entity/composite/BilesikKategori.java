@@ -1,0 +1,35 @@
+package org.example.ehali.entity.composite;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class BilesikKategori implements KategoriBileseni {
+
+    private String ad;
+    private List<KategoriBileseni> altKategoriler = new ArrayList<>();
+
+    public BilesikKategori(String ad) {
+        this.ad = ad;
+    }
+
+    public void ekle(KategoriBileseni kategori) {
+        altKategoriler.add(kategori);
+    }
+
+    public void cikar(KategoriBileseni kategori) {
+        altKategoriler.remove(kategori);
+    }
+
+    @Override
+    public String getAd() {
+        return this.ad;
+    }
+
+    @Override
+    public void yazdir() {
+        System.out.println("+ " + getAd());
+        for (KategoriBileseni kategori : altKategoriler) {
+            kategori.yazdir();
+        }
+    }
+}
