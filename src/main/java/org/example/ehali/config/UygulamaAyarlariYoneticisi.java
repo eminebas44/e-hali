@@ -6,30 +6,29 @@ package org.example.ehali.config;
  */
 public class UygulamaAyarlariYoneticisi {
 
-    // 1. Singleton örneğini tutacak private static değişken
-    // 'volatile' anahtar kelimesi, çoklu iş parçacığı ortamında
-    // 'instance' değişkeninin her zaman ana bellekten okunmasını sağlar.
+    // 1. Singleton örneğini tutacak private static volatile değişken
     private static volatile UygulamaAyarlariYoneticisi instance;
 
-    // Örnek bir yapılandırma özelliği
+    // Ayarlar
     private String uygulamaSurumu;
     private String yoneticiEpostasi;
+    private String jwtSecretKey; // <-- Bunu yeni ekledik (Token üretirken lazım olacak)
 
-    // 2. Dışarıdan nesne oluşturulmasını engellemek için private constructor
+    // 2. Private constructor (Dışarıdan erişimi engeller)
     private UygulamaAyarlariYoneticisi() {
-        // Gerçek bir uygulamada, bu constructor içinde
-        // yapılandırma dosyalarından (örn: application.properties) ayarlar okunabilir.
+        // Varsayılan ayarlar burada yükleniyor
         this.uygulamaSurumu = "1.0.0";
         this.yoneticiEpostasi = "admin@e-hali.com";
-        System.out.println("UygulamaAyarlariYoneticisi örneği oluşturuldu (Tembel Singleton).");
+        this.jwtSecretKey = "cok-gizli-ve-guvenli-anahtar-12345"; // JWT imzalama anahtarı
+
+        System.out.println("🚀 Config Yöneticisi Başlatıldı (Singleton Instance Created)");
     }
 
-    // 3. Singleton örneğine erişim için public static metot
-    // Double-Checked Locking (Çift Kontrollü Kilitleme) ile tembel başlatma ve iş parçacığı güvenliği sağlanır.
+    // 3. Global Erişim Noktası (Thread-Safe)
     public static UygulamaAyarlariYoneticisi getInstance() {
-        if (instance == null) { // İlk kontrol: Performans için (kilitlenmeden önce)
-            synchronized (UygulamaAyarlariYoneticisi.class) { // Senkronize blok: İş parçacığı güvenliği için
-                if (instance == null) { // İkinci kontrol: Nesnenin bir kez oluşturulduğundan emin olmak için
+        if (instance == null) { // İlk kontrol
+            synchronized (UygulamaAyarlariYoneticisi.class) {
+                if (instance == null) { // İkinci kontrol (Double-Check)
                     instance = new UygulamaAyarlariYoneticisi();
                 }
             }
@@ -37,7 +36,8 @@ public class UygulamaAyarlariYoneticisi {
         return instance;
     }
 
-    // Yapılandırma özelliklerine erişim metotları
+    // --- Getter ve Setter Metotları ---
+
     public String getUygulamaSurumu() {
         return uygulamaSurumu;
     }
@@ -46,11 +46,11 @@ public class UygulamaAyarlariYoneticisi {
         return yoneticiEpostasi;
     }
 
-    // Ayarları güncellemek için (isteğe bağlı, Singleton'ın doğasına göre dikkatli kullanılmalı)
-    public void setUygulamaSurumu(String uygulamaSurumu) {
-        this.uygulamaSurumu = uygulamaSurumu;
+    public String getJwtSecretKey() {
+        return jwtSecretKey;
     }
 
+    // Ayarları güncellemek gerekirse
     public void setYoneticiEpostasi(String yoneticiEpostasi) {
         this.yoneticiEpostasi = yoneticiEpostasi;
     }
