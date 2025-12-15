@@ -1,68 +1,95 @@
-import { Layout, Menu, theme, Button, Space, Typography } from 'antd';
-import { UserOutlined, DashboardOutlined, LogoutOutlined, TruckOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './GirisSayfasi.css'; // CSS dosyasını buraya bağlıyoruz
 
-const { Header, Content, Sider } = Layout;
-const { Title } = Typography;
+const GirisSayfasi: React.FC = () => {
+    // Sekme kontrolü (user veya admin)
+    const [activeTab, setActiveTab] = useState<'user' | 'admin'>('user');
 
-const Anasayfa = () => {
-    const {
-        token: { colorBgContainer, borderRadiusLG },
-    } = theme.useToken();
+    // Input verileri
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
-    // Çıkış (Logout) işlemi
-    const handleLogout = () => {
-        localStorage.removeItem('token'); // Tokeni siliyoruz
-        window.location.href = '/'; // Giriş sayfasına yönlendiriyoruz
+    const navigate = useNavigate();
+
+    const handleLogin = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (activeTab === 'admin') {
+            // --- ADMIN KONTROLÜ ---
+            if (username === 'admin' && password === '1234') {
+                alert('Admin paneline yönlendiriliyorsunuz...');
+                navigate('/admin-panel');
+            } else {
+                alert('Hatalı Yönetici Bilgisi!');
+            }
+        }
+        else {
+            // --- MÜŞTERİ KONTROLÜ ---
+            if (username && password) {
+                alert('Giriş başarılı! Anasayfaya yönlendiriliyorsunuz...');
+                navigate('/');
+            } else {
+                alert('Lütfen tüm alanları doldurun.');
+            }
+        }
     };
 
     return (
-        <Layout style={{ minHeight: '100vh' }}>
-            <Header style={{ display: 'flex', alignItems: 'center', background: '#4e4376', padding: '0 24px' }}>
-                <div style={{ color: 'white', fontSize: '24px', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}>
-                    <TruckOutlined style={{ marginRight: 10 }} />
-                    E-Hali Yönetim
+        <div className="login-body">
+            <div className="login-container">
+
+                {/* Logo Bölümü */}
+                <div className="logo">
+                    <h1>e-Halı</h1>
+                    <p className="slogan">Gelenekten Geleceğe</p>
                 </div>
-                <div style={{ flexGrow: 1 }} />
-                <Space>
-                    <Button type="text" style={{ color: 'white' }} icon={<LogoutOutlined />} onClick={handleLogout}>
-                        Çıkış Yap
-                    </Button>
-                </Space>
-            </Header>
 
-            <Layout>
-                <Sider width={200} style={{ background: colorBgContainer }}>
-                    <Menu
-                        mode="inline"
-                        defaultSelectedKeys={['1']}
-                        style={{ height: '100%', borderRight: 0 }}
-                        items={[
-                            { key: '1', icon: <DashboardOutlined />, label: 'Dashboard' },
-                            { key: '2', icon: <ShoppingCartOutlined />, label: 'Sipariş Yönetimi' },
-                            { key: '3', icon: <UserOutlined />, label: 'Müşteriler' },
-                        ]}
-                    />
-                </Sider>
-
-                <Layout style={{ padding: '0 24px 24px' }}>
-                    <Content
-                        style={{
-                            padding: 24,
-                            margin: '16px 0 0',
-                            minHeight: 280,
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
+                {/* Sekme Değiştirme (Toggle) */}
+                <div className="toggle-container">
+                    <button
+                        className={`toggle-btn ${activeTab === 'user' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('user')}
                     >
-                        <Title level={3}>👋 Yönetim Paneline Hoş Geldiniz!</Title>
-                        <p>Soldaki menüden işlemlerinizi seçebilirsiniz.</p>
-                        {/* Burada Dashboard bilgileri yer alacak */}
-                    </Content>
-                </Layout>
-            </Layout>
-        </Layout>
+                        Müşteri Girişi
+                    </button>
+                    <button
+                        className={`toggle-btn ${activeTab === 'admin' ? 'active' : ''}`}
+                        onClick={() => setActiveTab('admin')}
+                    >
+                        Admin Girişi
+                    </button>
+                </div>
+
+                {/* Form Alanı */}
+                <form onSubmit={handleLogin}>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            placeholder={activeTab === 'admin' ? "Admin Kullanıcı Adı" : "E-posta Adresi"}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <div className="input-group">
+                        <input
+                            type="password"
+                            placeholder="Şifre"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="btn-giris">
+                        {activeTab === 'admin' ? 'YÖNETİCİ GİRİŞİ' : 'GİRİŞ YAP'}
+                    </button>
+                </form>
+            </div>
+        </div>
     );
 };
 
-export default Anasayfa;
+export default GirisSayfasi;
