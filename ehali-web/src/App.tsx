@@ -1,25 +1,24 @@
-// src/App.tsx
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import GirisSayfasi from "./pages/GirisSayfasi";
-
-// Geçici bileşenler (Hata almamak için)
-const HomePage = () => <h1 style={{color:'black', textAlign:'center', marginTop:'50px'}}>Anasayfa (Müşteri)</h1>;
-const AdminPanel = () => <h1 style={{color:'black', textAlign:'center', marginTop:'50px'}}>Admin Paneli</h1>;
+import KayitOlSayfasi from "./pages/KayitOlSayfasi";
+import MusteriAnasayfasi from "./pages/MusteriAnasayfasi";
 
 function App() {
     return (
-        // BrowserRouter'ı BURADAN SİLDİK (Çünkü main.tsx'te var)
-        <Routes>
-            {/* Giriş Sayfası Rotası - Anasayfa olarak ayarladık */}
-            <Route path="/" element={<GirisSayfasi />} />
+        <BrowserRouter>
+            <Routes>
+                {/* Giriş Sayfası (Açılış) */}
+                <Route path="/" element={<GirisSayfasi />} />
 
-            {/* /giris de çalışsın istersek */}
-            <Route path="/giris" element={<GirisSayfasi />} />
+                {/* Kayıt Ol Sayfası */}
+                <Route path="/kayit-ol" element={<KayitOlSayfasi />} />
 
-            {/* Diğer sayfalar */}
-            <Route path="/home" element={<HomePage />} />
-            <Route path="/admin-panel" element={<AdminPanel />} />
-        </Routes>
+                {/* Müşteri Ana Sayfası */}
+                <Route path="/musteri-anasayfa" element={<MusteriAnasayfasi />} />
+                // Routes kısmının içine, diğerlerinin yanına ekle:
+                <Route path="/seller-panel" element={<div style={{padding: '50px', textAlign: 'center'}}><h1>Satıcı Paneli Çok Yakında!</h1></div>} />
+            </Routes>
+        </BrowserRouter>
     );
 }
 

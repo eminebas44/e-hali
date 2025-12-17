@@ -1,58 +1,62 @@
 package org.example.ehali.config;
 
+import org.example.ehali.guvenlik.JwtKimlikDogrulamaFiltresi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration; // Import gerekli
-import org.springframework.web.cors.CorsConfigurationSource; // Import gerekli
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource; // Import gerekli
-import java.util.Arrays; // Import gerekli
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtKimlikDogrulamaFiltresi jwtAuthFilter;
+    private final AuthenticationProvider authenticationProvider;
+
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. CORS'u aktif et ve corsConfigurationSource Bean'ini kullan
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
-                // 2. CSRF'i kapat
-                .csrf(csrf -> csrf.disable())
-
-                // 3. Yetkilendirme Kuralları
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <--- CORS BURADA AKTİF EDİLDİ
                 .authorizeHttpRequests(auth -> auth
-                        // Auth (Giriş/Kayıt) işlemlerine izin ver (permitAll() ile)
-                        .requestMatchers("/api/auth/**").permitAll()
-
-                        // Swagger UI ve API Dokümantasyonuna izin ver
                         .requestMatchers(
+                                "/api/auth/**",
+                                "/api/halilar/**",
+                                "/api/kategoriler/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
-
-                        // Geri kalan her yer için giriş yapılmış olsun
                         .anyRequest().authenticated()
-                );
+                )
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    /**
-     * Frontend adresine izin veren standart CORS konfigürasyonu.
-     */
+    // --- React İçin İzin Ayarları ---
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Frontend adresine izin ver
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+
+        // React'ın çalıştığı adresler (Vite genelde 5173 kullanır)
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

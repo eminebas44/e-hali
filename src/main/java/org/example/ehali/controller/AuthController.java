@@ -1,38 +1,77 @@
 package org.example.ehali.controller;
 
-import org.example.ehali.config.UygulamaAyarlariYoneticisi;
-import org.example.ehali.dto.LoginRequestDTO;
+import lombok.RequiredArgsConstructor;
+import org.example.ehali.dto.AuthRequest;
+import org.example.ehali.dto.RegisterRequest; // Yeni DTO'yu import ettik
+import org.example.ehali.guvenlik.JwtServisi;
+import org.example.ehali.repository.KullaniciRepository;
+import org.example.ehali.service.AuthenticationService; // Servisimizi import ettik
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @PostMapping("/giris")
-    public ResponseEntity<?> girisYap(@RequestBody LoginRequestDTO request) {
+    private final AuthenticationManager authenticationManager;
+    private final KullaniciRepository kullaniciRepository;
+    private final JwtServisi jwtServisi;
+    private final AuthenticationService authenticationService; // Servisi inject ettik
 
-        // Singleton üzerinden yönetici e-postasını alıyoruz
-        String yoneticiEmail = UygulamaAyarlariYoneticisi.getInstance().getYoneticiEpostasi();
-        String varsayilanSifre = "123456"; // Şifreyi de sabit kontrol edelim (Gereksiz DB sorgusunu önlemek için)
+    @PostMapping("/register") // YENİ KAYIT ENDPOINT'İ
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        try {
+            // Gelen isteği servis katmanına yönlendiriyoruz
+            var response = authenticationService.register(request);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // Hata durumunda anlamlı bir mesaj dönüyoruz
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Kayıt sırasında bir hata oluştu: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
+    }
 
-        // 1. E-Posta ve Şifre Kontrolü (SADECE Singleton ile)
-        if (yoneticiEmail.equals(request.getEmail()) && varsayilanSifre.equals(request.getSifre())) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
 
-            // Başarılı giriş
+            var user = kullaniciRepository.findByEmail(request.getEmail())
+                    .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
+
+            var jwtToken = jwtServisi.tokenOlustur(user);
+
             Map<String, String> response = new HashMap<>();
-            String surum = UygulamaAyarlariYoneticisi.getInstance().getUygulamaSurumu();
-
-            response.put("token", "fake-jwt-token-" + surum);
-            response.put("message", "Yönetici Girişi Başarılı! (v" + surum + ")");
+            response.put("token", jwtToken);
+            response.put("role", user.getRol().toString());
 
             return ResponseEntity.ok(response);
-        }
 
-        // 2. Başarısız giriş
-        return ResponseEntity.status(401).body("E-Posta veya Şifre hatalı!");
+        } catch (BadCredentialsException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Hatalı e-posta veya şifre.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Sunucu tarafında bir hata oluştu: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 }

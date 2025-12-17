@@ -1,141 +1,232 @@
-/* Google Fonts - Sevdiğin Yazı Tipleri */
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600&display=swap');
+/* 1. Google Fonts'tan Premium Fontları Çekiyoruz */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap');
 
-/* Genel Sayfa Yapısı */
+/* 2. Sayfa Genel Ayarları */
 .login-body {
+    height: 100vh; /* Tüm ekranı kapla */
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    /* Görseldeki Koyu Bordo Arka Plan */
-    background-color: #6d1f2a;
-    font-family: 'Poppins', sans-serif;
+    justify-content: center; /* Yatay ortala */
+    align-items: center; /* Dikey ortala */
+    background-color: #5D1826; /* Marka Rengi: Bordo */
+    font-family: 'Montserrat', sans-serif; /* Genel yazı tipi */
+    position: relative;
     margin: 0;
 }
 
-/* Giriş Kartı (Daha Beyaz ve Net) */
+/* 3. Beyaz Giriş Kartı */
 .login-container {
-    background-color: #ffffff; /* Tam beyaz */
+    background-color: white;
     padding: 40px;
-    border-radius: 15px; /* Köşeleri görseldeki gibi */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    width: 360px;
+    border-radius: 24px; /* Köşeleri yumuşat */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); /* Derin gölge */
+    width: 100%;
+    max-width: 380px;
     text-align: center;
-    color: #333; /* Metin rengi koyu */
 }
 
-/* LOGO BÖLÜMÜ */
-.logo-img {
-    width: 100px; /* Logo boyutu */
-    height: auto;
-    margin-bottom: 10px;
-}
-
-.brand-name {
-    font-family: 'Great Vibes', cursive; /* Sevdiğin el yazısı fontu */
-    font-size: 3.5rem;
-    color: #5a1a22; /* Koyu bordo başlık rengi */
-    margin: 0;
-    line-height: 1.2;
-}
-
-.slogan {
-    font-size: 0.95rem;
-    color: #666;
-    margin-top: -5px;
+/* 4. Logo ve Marka Alanı */
+.logo-section {
     margin-bottom: 25px;
-}
-
-/* Sekmeler (Müşteri / Admin) */
-.toggle-container {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 25px;
-    background-color: #f0f0f0;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    border-radius: 50%;
+    border: 3px solid #5D1826;
     padding: 5px;
-    border-radius: 30px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* YENİ: Estetik Marka İsmi */
+.brand-name {
+    font-family: 'Great Vibes', cursive;
+    color: #5D1826;
+    font-size: 3.5rem;
+    margin: 10px 0 0 0;
+    line-height: 1.2;
+    text-shadow: 2px 2px 4px rgba(93, 24, 38, 0.1);
+}
+
+/* YENİ: Modern Slogan */
+.slogan {
+    font-family: 'Montserrat', sans-serif;
+    color: #888;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase; /* Büyük harf */
+    letter-spacing: 3px; /* Harf aralığı */
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+    display: inline-block;
+}
+
+/* 5. Sekmeler (Müşteri - Satıcı) */
+.toggle-container {
+    background-color: #f4f4f4;
+    border-radius: 50px;
+    padding: 5px;
+    display: flex;
+    margin-bottom: 25px;
 }
 
 .toggle-btn {
     flex: 1;
-    background: none;
     border: none;
-    color: #666;
-    font-size: 0.9rem;
-    font-weight: 500;
+    background: transparent;
+    padding: 12px;
+    border-radius: 50px;
     cursor: pointer;
+    font-weight: 600;
+    color: #777;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
-    padding: 8px 15px;
-    border-radius: 25px;
-    font-family: 'Poppins', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px; /* İkon ile yazı arası boşluk */
 }
 
-/* Seçili olan sekme */
 .toggle-btn.active {
-    background-color: #6d1f2a; /* Bordo arka plan */
-    color: #fff; /* Beyaz yazı */
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    background-color: #5D1826;
+    color: white;
+    box-shadow: 0 4px 12px rgba(93, 24, 38, 0.3);
 }
 
-/* Form Alanları */
+/* 6. Form Alanları */
 .input-group {
-    margin-bottom: 15px;
     position: relative;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
 }
 
-.input-group i {
+.input-icon {
     position: absolute;
     left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #aaa;
+    color: #5D1826;
+    z-index: 1;
     font-size: 1.1rem;
 }
 
 .input-group input {
     width: 100%;
-    padding: 12px 15px 12px 45px; /* İkon için soldan boşluk */
-    background-color: #f5f5f5; /* Açık gri arka plan */
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    color: #333;
-    font-size: 0.95rem;
+    padding: 14px 15px 14px 45px; /* İkon boşluğu */
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    background-color: #f9f9f9;
     outline: none;
+    font-size: 0.95rem;
+    font-family: 'Montserrat', sans-serif;
     transition: 0.3s;
-    box-sizing: border-box;
 }
 
 .input-group input:focus {
-    border-color: #6d1f2a;
-    background-color: #fff;
+    border-color: #5D1826;
+    background-color: white;
+    box-shadow: 0 0 0 3px rgba(93, 24, 38, 0.1);
 }
 
-.input-group input::placeholder {
-    color: #aaa;
-}
-
-/* Giriş Butonu */
+/* 7. Giriş Butonu */
 .btn-giris {
     width: 100%;
-    padding: 12px;
-    /* Görseldeki Koyu Bordo Buton */
-    background-color: #5a1a22;
-    border: none;
-    border-radius: 8px;
+    background-color: #5D1826;
     color: white;
-    font-size: 1.1rem;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.3s;
     margin-top: 10px;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     gap: 10px;
+    font-family: 'Montserrat', sans-serif;
+    transition: transform 0.2s, background-color 0.2s;
 }
 
 .btn-giris:hover {
-    background-color: #6d1f2a;
+    background-color: #4a131e;
     transform: translateY(-2px);
+}
+
+/* 8. Alt Linkler */
+.footer-text {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.register-link {
+    color: #5D1826;
+    font-weight: 700;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: color 0.2s;
+}
+
+.register-link:hover {
+    color: #802235;
+    text-decoration: underline;
+}
+
+/* 9. Sağ Alt Köşe Admin Butonu (Glassmorphism) */
+.admin-access-btn {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background-color: rgba(255, 255, 255, 0.15); /* Şeffaf beyaz */
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 0.9);
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px); /* Arka planı bulanıklaştır */
+}
+
+.admin-access-btn:hover {
+    background-color: white;
+    color: #5D1826;
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 480px) {
+    .login-container {
+        max-width: 90%;
+        padding: 30px 20px;
+    }
+
+    .brand-name {
+        font-size: 2.8rem;
+    }
+
+    .admin-access-btn {
+        bottom: 15px;
+        right: 50%;
+        transform: translateX(50%); /* Mobilde ortala */
+        width: max-content;
+        background-color: rgba(0, 0, 0, 0.2); /* Mobilde daha görünür olsun */
+    }
+
+    .admin-access-btn:hover {
+        transform: translateX(50%) translateY(-3px);
+    }
 }

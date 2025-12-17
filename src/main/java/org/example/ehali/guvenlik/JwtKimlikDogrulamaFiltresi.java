@@ -1,9 +1,10 @@
-package org.example.ehali.guvenlik;
+package org.example.ehali.guvenlik; // Paket ismini dosyayı oluşturduğun yere göre ayarla
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,19 +13,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtKimlikDogrulamaFiltresi extends OncePerRequestFilter {
 
-    private final JwtServisi jwtServisi;
+    private final JwtServisi jwtService;
     private final UserDetailsService userDetailsService;
-
-    public JwtKimlikDogrulamaFiltresi(JwtServisi jwtServisi, UserDetailsService userDetailsService) {
-        this.jwtServisi = jwtServisi;
-        this.userDetailsService = userDetailsService;
-    }
 
     @Override
     protected void doFilterInternal(
@@ -41,21 +37,22 @@ public class JwtKimlikDogrulamaFiltresi extends OncePerRequestFilter {
             return;
         }
 
-        jwt = authHeader.substring(7);
-        userEmail = jwtServisi.kullaniciAdiCikar(jwt);
+        try {
+            jwt = authHeader.substring(7);
+            userEmail = jwtService.kullaniciAdiCikar(jwt);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-
-            if (jwtServisi.tokenGecerliMi(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                if (jwtService.tokenGecerliMi(jwt, userDetails)) {
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("JWT Hatası: " + e.getMessage());
         }
         filterChain.doFilter(request, response);
     }
