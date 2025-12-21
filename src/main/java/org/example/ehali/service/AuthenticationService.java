@@ -5,9 +5,11 @@ import org.example.ehali.dto.AuthenticationResponse;
 import org.example.ehali.dto.AuthRequest;
 import org.example.ehali.dto.RegisterRequest;
 import org.example.ehali.entity.Kullanici;
+import org.example.ehali.entity.Musteri; // Yeni eklendi
 import org.example.ehali.entity.Rol;
 import org.example.ehali.entity.Satici;
 import org.example.ehali.repository.KullaniciRepository;
+import org.example.ehali.repository.MusteriRepository; // Yeni eklendi
 import org.example.ehali.repository.SaticiRepository;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthenticationService {
 
     private final KullaniciRepository repository;
+    private final MusteriRepository musteriRepository; // Müşteri tablosu için eklendi
     private final SaticiRepository saticiRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -27,30 +30,25 @@ public class AuthenticationService {
 
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
-        // --- EKLEDİĞİMİZ LOG SATIRI ---
-        // Hangi e-postanın geldiğini IntelliJ konsolundan takip edebilirsin.
-        System.out.println("Kayıt denemesi yapılıyor. E-posta: " + request.getEmail());
+        System.out.println("Kayıt işlemi başlatıldı: " + request.getEmail() + " Rol: " + request.getRol());
 
-        // 1. E-POSTA TEMİZLİĞİ VE KONTROLÜ
+        // 1. E-POSTA KONTROLÜ
         String temizEmail = request.getEmail().toLowerCase().trim();
-
         if (repository.findByEmail(temizEmail).isPresent()) {
-            throw new RuntimeException("Bu e-posta adresi (" + temizEmail + ") zaten kullanılıyor.");
+            throw new RuntimeException("Bu e-posta adresi zaten kayıtlı!");
         }
 
-        // 2. ROL DÖNÜŞTÜRME
-        Rol kullaniciRolu = Rol.USER;
+        // 2. ROL BELİRLEME (Varsayılan olarak MUSTERI yapıyoruz)
+        Rol kullaniciRolu;
         try {
-            if (request.getRol() != null) {
-                // request.getRol() objeyse toString() eklemek daha güvenlidir.
-                kullaniciRolu = Rol.valueOf(request.getRol().toString().toUpperCase());
-            }
+            kullaniciRolu = Rol.valueOf(request.getRol().toString().toUpperCase());
         } catch (Exception e) {
-            kullaniciRolu = Rol.USER;
+            kullaniciRolu = Rol.MUSTERI;
         }
 
-        // 3. KULLANICIYI KAYDET
-        var user = Kullanici.builder()
+        // 3. ORTAK KULLANICI NESNESİNİ OLUŞTUR
+        // Ad ve Soyad artık burada tutuluyor!
+        Kullanici user = Kullanici.builder()
                 .ad(request.getAd())
                 .soyad(request.getSoyad())
                 .email(temizEmail)
@@ -58,18 +56,27 @@ public class AuthenticationService {
                 .rol(kullaniciRolu)
                 .build();
 
-        var savedUser = repository.save(user);
+        // 4. ROLE GÖRE ÖZEL TABLOYA KAYIT
+        if (kullaniciRolu == Rol.MUSTERI) {
+            Musteri musteri = Musteri.builder()
+                    .kullanici(user) // User nesnesini içine gömüyoruz (Cascade sayesinde user da kaydolur)
+                    .adres(request.getAdres())
+                    .build();
+            musteriRepository.save(musteri);
 
-        // 4. SATICI KAYDI
-        if (kullaniciRolu == Rol.SATICI) {
-            Satici satici = new Satici();
-            satici.setKullanici(savedUser);
-            satici.setAd(request.getAd());
-            satici.setSoyad(request.getSoyad());
-            satici.setTelefon(request.getTelefon());
+        } else if (kullaniciRolu == Rol.SATICI) {
+            Satici satici = Satici.builder()
+                    .kullanici(user)
+                    .telefon(request.getTelefon())
+                    .build();
             saticiRepository.save(satici);
+
+        } else {
+            // Admin ise sadece kullanıcı tablosuna kaydet
+            repository.save(user);
         }
 
+        // 5. TOKEN OLUŞTUR VE DÖN
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

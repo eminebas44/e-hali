@@ -1,153 +1,162 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./MusteriAnasayfasi.css"; // Senin CSS dosyanı buraya bağlıyoruz
+import "./MusteriAnasayfasi.css";
 
-// --- RESİMLERİ IMPORT EDİYORUZ ---
-// (Dosya yolları ekran görüntüsündeki assets klasörüne göredir)
-import imgIpek from "../assets/ipek-hali.png";
+// Assets importları
+import imgLogo from "../assets/hali-logo.png";
+import imgIpek from "../assets/ipek-hali.png"; // İpek görselleriyle uyumlu olması için güncellendi
 import imgKasmir from "../assets/kasmir-hali.png";
 import imgYun from "../assets/yun-hali.png";
-import imgModern from "../assets/modern-hali.png";
 import imgBunyan from "../assets/Bünyan (Kayseri) Halıları.png";
-import imgLogo from "../assets/hali-logo.png";
+import imgModern from "../assets/modern-hali.png";
+import imgAntik from "../assets/antikanadolumiras-hali.png";
+import imgKilim from "../assets/etnikkilim-hali.png";
+import imgVintage from "../assets/vintageeskitme-hali.png";
 
-// --- SAHTE VERİ (Resimler artık gerçek) ---
 const mockHalilar = [
-    { id: 1, ad: "Saray Serisi Hereke", kategori: "İpek", fiyat: 35000, resim: imgIpek, puan: 5.0 },
-    { id: 2, ad: "Geleneksel Kayseri", kategori: "Bünyan", fiyat: 18500, resim: imgBunyan, puan: 4.8 },
-    { id: 3, ad: "Uşak Yün Halı", kategori: "Yün", fiyat: 12000, resim: imgYun, puan: 4.9 },
-    { id: 4, ad: "Saf Kaşmir Dokuma", kategori: "Kaşmir", fiyat: 25000, resim: imgKasmir, puan: 5.0 },
-    { id: 5, ad: "Modern Salon Halısı", kategori: "Modern", fiyat: 8500, resim: imgModern, puan: 4.5 },
-    { id: 6, ad: "Antik Yörük Kilimi", kategori: "Yün", fiyat: 4500, resim: imgYun, puan: 4.7 }, // Yün görselini tekrar kullandık örnek için
+    {
+        id: 1, ad: "Saray Serisi Hereke", kategori: "İpek", resim: imgIpek,
+        icerik: "Saf ipek kozalarından elde edilen ipliklerle dokunmuştur. Işığın geliş açısına göre renk değiştiren bu eser, zarafetin zirvesidir.",
+        kullanimAlani: "Lüks salonlar ve protokol odaları.",
+        materyal: "%100 El Dokuma İpek"
+    },
+    {
+        id: 2, ad: "Geleneksel Kayseri", kategori: "Bünyan", resim: imgBunyan,
+        icerik: "Anadolu'nun kadim motiflerini sunan bu halı, doğal kök boyalı yünlerden üretilmiştir. Nesiller boyu eskimeyen bir mirastır.",
+        kullanimAlani: "Oturma odaları ve otantik alanlar.",
+        materyal: "Doğal Yün & Pamuk"
+    },
+    {
+        id: 3, ad: "Uşak Yün Halı", kategori: "Yün", resim: imgYun,
+        icerik: "Geleneksel Türk düğümü ile dokunmuş, yüksek havlı ve yumuşak dokulu bir eserdir. Isı yalıtımı ve konforu maksimize eder.",
+        kullanimAlani: "Yatak odaları ve aile odaları.",
+        materyal: "Halis Anadolu Yünü"
+    },
+    {
+        id: 4, ad: "Saf Kaşmir Dokuma", kategori: "Kaşmir", resim: imgKasmir,
+        icerik: "Premium kaşmir liflerinden üretilen bu seri, dokunma duyunuza hitap eden eşsiz bir yumuşaklığa sahiptir.",
+        kullanimAlani: "Modern minimalist salonlar.",
+        materyal: "Yüksek Kalite Kaşmir"
+    },
+    {
+        id: 5, ad: "Modern Geometrik", kategori: "Modern", resim: imgModern,
+        icerik: "Minimalist çizgilerle geleneksel dokuma sanatını birleştiren bu seri, modern evlerin enerjisini değiştirmek için tasarlandı.",
+        kullanimAlani: "Modern daireler ve ofisler.",
+        materyal: "Akrilik & Yün Karışımı"
+    },
+    {
+        id: 6, ad: "Antik Anadolu Mirası", kategori: "Antik", resim: imgAntik,
+        icerik: "Yüzyıllık desenlerin sadık bir yeniden yorumu. Eskitilmiş dokusuyla tarihin yaşanmışlığını mekanlarınıza taşır.",
+        kullanimAlani: "Klasik ve vintage dekorasyonlar.",
+        materyal: "Eskitme El Dokuma Yün"
+    },
+    {
+        id: 7, ad: "Etnik Kilim Serisi", kategori: "Kilim", resim: imgKilim,
+        icerik: "İnce dokusu ve canlı renkleriyle dinamik bir atmosfer sağlar. Pratik kullanımı ve kültürel derinliğiyle öne çıkar.",
+        kullanimAlani: "Yazlık evler, mutfak ve koridorlar.",
+        materyal: "Atkı ve Çözgü Pamuk/Yün"
+    },
+    {
+        id: 8, ad: "Vintage Eskitme", kategori: "Vintage", resim: imgVintage,
+        icerik: "Modern renk paletiyle harmanlanmış klasik desenler. Retro sevenler için tasarlanmış, karakteristik bir parça.",
+        kullanimAlani: "Loft daireler ve stüdyolar.",
+        materyal: "Özel Yıkama Doğal Elyaf"
+    }
 ];
 
-const kategoriler = ["Tümü", "İpek", "Bünyan", "Yün", "Kaşmir", "Modern"];
+const kategoriler = ["Tümü", "İpek", "Bünyan", "Yün", "Kaşmir", "Modern", "Antik", "Kilim", "Vintage"];
 
 export default function MusteriAnasayfasi() {
     const navigate = useNavigate();
-    const [kullaniciAdi, setKullaniciAdi] = useState("");
     const [seciliKategori, setSeciliKategori] = useState("Tümü");
-    const [aramaMetni, setAramaMetni] = useState("");
+    const token = localStorage.getItem("userToken");
 
-    useEffect(() => {
-        const email = localStorage.getItem("userEmail");
-        if (email) {
-            // Emailden @ işaretinden öncesini alıp isim yapalım (örn: emine)
-            setKullaniciAdi(email.split('@')[0]);
-        }
-    }, []);
-
-    const cikisYap = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("userEmail");
-        navigate("/");
-    };
-
-    // --- FİLTRELEME MANTIĞI ---
     const filtrelenmisUrunler = mockHalilar.filter((hali) => {
-        const kategoriUyumu = seciliKategori === "Tümü" || hali.kategori === seciliKategori;
-        const aramaUyumu = hali.ad.toLowerCase().includes(aramaMetni.toLowerCase());
-        return kategoriUyumu && aramaUyumu;
+        return seciliKategori === "Tümü" || hali.kategori === seciliKategori;
     });
 
     return (
-        <div>
-            {/* --- NAVBAR --- */}
+        <div className="anasayfa-wrapper">
+            {/* NAVBAR */}
             <nav className="navbar">
-                <div className="nav-brand">
+                <div className="nav-brand" onClick={() => navigate("/")}>
                     <img src={imgLogo} alt="Logo" className="nav-logo" />
-                    <span className="brand-text">E-Halı Dünyası</span>
-                </div>
-
-                <div className="search-bar-container">
-                    <i className="fas fa-search search-icon"></i> {/* FontAwesome varsa ikon çıkar */}
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="Halı ara... (Örn: Hereke, İpek)"
-                        value={aramaMetni}
-                        onChange={(e) => setAramaMetni(e.target.value)}
-                    />
+                    <span className="brand-text">Carpyet</span>
                 </div>
 
                 <div className="nav-actions">
-                    <div className="user-profile">
-                        <span>Merhaba, {kullaniciAdi || "Misafir"}</span>
+                    <div className="nav-item" onClick={() => navigate("/favoriler")}>
+                        <span className="nav-icon">❤️</span>
+                        <small>Favoriler</small>
                     </div>
-                    <div className="nav-item">
-                        🛒 <span className="nav-badge">0</span>
+
+                    <div className="nav-item" onClick={() => navigate("/sepet")}>
+                        <span className="nav-icon">🛒</span>
+                        <small>Sepet</small>
                     </div>
-                    <div className="nav-item" onClick={cikisYap} style={{color: '#d63031', fontSize: '1rem'}}>
-                        Çıkış
+
+                    <div className="auth-buttons">
+                        {!token ? (
+                            <>
+                                <button className="login-text-btn" onClick={() => navigate("/giris")}>Giriş Yap</button>
+                                <button className="register-fill-btn" onClick={() => navigate("/kayit-ol")}>Kayıt Ol</button>
+                            </>
+                        ) : (
+                            <button className="logout-btn" onClick={() => { localStorage.clear(); navigate("/giris"); }}>Çıkış Yap</button>
+                        )}
                     </div>
                 </div>
             </nav>
 
-            {/* --- HERO SECTION (Banner) --- */}
             <header className="hero-section">
                 <div className="hero-overlay">
-                    <h1>Anadolu'nun İlmekleri</h1>
-                    <p>Evinize Tarih, Zemine Sanat Seriyoruz.</p>
-                    <button className="hero-btn" onClick={() => document.getElementById('urunler').scrollIntoView({behavior: 'smooth'})}>
-                        Koleksiyonu Keşfet
-                    </button>
+                    <h1>Zanaatın Hikayesi</h1>
+                    <p>Halılarımız yüzyıllık birer mirastır.</p>
                 </div>
             </header>
 
-            {/* --- KATEGORİLER --- */}
-            <div className="categories-bar">
-                {kategoriler.map((kat) => (
-                    <button
-                        key={kat}
-                        className={`cat-btn ${seciliKategori === kat ? "active" : ""}`}
-                        onClick={() => setSeciliKategori(kat)}
-                    >
-                        {kat}
-                    </button>
-                ))}
+            <div className="categories-container">
+                <div className="categories-bar">
+                    {kategoriler.map(kat => (
+                        <button
+                            key={kat}
+                            className={`cat-btn ${seciliKategori === kat ? "active" : ""}`}
+                            onClick={() => setSeciliKategori(kat)}
+                        >
+                            {kat}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* --- ÜRÜN LİSTESİ --- */}
-            <section className="products-section" id="urunler">
-                <h2 className="section-title">
-                    {seciliKategori === "Tümü" ? "Öne Çıkan Koleksiyonlar" : `${seciliKategori} Halıları`}
-                </h2>
+            <section className="products-grid-container">
+                {filtrelenmisUrunler.map((hali) => (
+                    <div key={hali.id} className="compact-product-card">
+                        <div className="card-image-side">
+                            <img src={hali.resim} alt={hali.ad} className="hali-img" />
+                        </div>
 
-                {filtrelenmisUrunler.length === 0 ? (
-                    <div className="no-product">Aradığınız kriterlere uygun ürün bulunamadı.</div>
-                ) : (
-                    <div className="products-grid">
-                        {filtrelenmisUrunler.map((hali) => (
-                            <div key={hali.id} className="product-card">
-                                <button className="fav-btn">♥</button>
+                        <div className="card-info-side">
+                            <span className="hali-kat-tag">{hali.kategori} Koleksiyonu</span>
+                            <h3 className="hali-name">{hali.ad}</h3>
+                            <p className="hali-desc">{hali.icerik}</p>
 
-                                <div className="card-image-wrapper">
-                                    <img src={hali.resim} alt={hali.ad} className="product-image" />
-                                </div>
-
-                                <div className="card-info">
-                                    <div className="card-header">
-                                        <h3>{hali.ad}</h3>
-                                        <div className="rating">★ {hali.puan}</div>
-                                    </div>
-
-                                    <p className="category-text">{hali.kategori} Serisi</p>
-
-                                    <div className="card-footer">
-                                        <span className="price">{hali.fiyat.toLocaleString()} ₺</span>
-                                        <button className="add-cart-btn">Sepete Ekle</button>
-                                    </div>
-                                </div>
+                            <div className="hali-meta">
+                                <div><strong>Materyal:</strong> {hali.materyal}</div>
+                                <div><strong>Alan:</strong> {hali.kullanimAlani}</div>
                             </div>
-                        ))}
-                    </div>
-                )}
-            </section>
 
-            {/* --- FOOTER --- */}
-            <footer className="footer">
-                <p>&copy; 2025 E-Halı Dünyası. Tüm hakları saklıdır. | Geleneksel El Dokuma Sanatı</p>
-            </footer>
+                            {/* KOLEKSİYONU GÖR BUTONU */}
+                            <button
+                                className="coll-btn"
+                                onClick={() => navigate(`/kategori/${hali.kategori.toLowerCase()}`)}
+                            >
+                                Koleksiyonu Gör →
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </section>
         </div>
     );
 }

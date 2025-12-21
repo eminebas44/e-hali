@@ -1,16 +1,13 @@
 package org.example.ehali.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -25,12 +22,6 @@ public class Musteri {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "kullanici_id", referencedColumnName = "id")
     private Kullanici kullanici;
-
-    @Column(name = "ad", nullable = false, length = 100)
-    private String ad;
-
-    @Column(name = "soyad", nullable = false, length = 100)
-    private String soyad;
 
     @Column(name = "adres", columnDefinition = "TEXT")
     private String adres;

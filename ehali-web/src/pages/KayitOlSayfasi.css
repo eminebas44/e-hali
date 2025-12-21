@@ -1,211 +1,225 @@
-/* Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-:root {
-    --primary-bordo: #5D1826;
-    --primary-gold: #D4AF37;
-    --text-dark: #333;
-    /* Resim çok canlı olduğu için yazılar okunsun diye %85 karartma uyguluyoruz */
-    --bg-overlay: rgba(20, 10, 15, 0.85);
-}
-
-/* Sayfa Genel Yapısı */
 .register-body {
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: 'Montserrat', sans-serif;
-    padding: 20px;
-
-    /* --- GÜNCELLENEN KISIM BURASI --- */
-    /* Senin yüklediğin 'arkaplan-ehali.png' görselini kullanıyoruz */
-    background: linear-gradient(var(--bg-overlay), var(--bg-overlay)),
-    url('../assets/arkaplan-ehali.png');
-    background-size: cover;     /* Resmi ekrana yay */
-    background-position: center; /* Ortala */
-    background-attachment: fixed; /* Kaydırınca sabit kalsın */
-}
-
-/* Beyaz Kutu - Giriş Sayfasıyla Aynı Boyut (400px) */
-.register-card {
-    background: white;
-    width: 100%;
-    max-width: 400px;
-    border-radius: 16px;
-    /* Kutuya daha güçlü gölge verelim ki arka plandan ayrılsın */
-    box-shadow: 0 25px 60px rgba(0,0,0,0.6);
-    padding: 30px;
-    position: relative;
-    border-top: 5px solid var(--primary-gold);
-}
-
-/* Üst Kısım */
-.register-header {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* MERHABA Yazısı */
-.welcome-script {
-    font-family: 'Great Vibes', cursive;
-    font-size: 3.2rem;
-    color: var(--primary-bordo);
+    background: radial-gradient(circle at center, #7a2032, #41111a);
     margin: 0;
-    line-height: 1;
-    text-shadow: 2px 2px 0px rgba(212, 175, 55, 0.2);
-    transform: rotate(-3deg);
-    margin-bottom: 10px;
+    font-family: 'Montserrat', sans-serif;
 }
 
-.brand-logo-img {
-    width: 60px;
-    height: 60px;
-    object-fit: contain;
+.main-card-premium {
+    display: flex;
+    width: 1000px;
+    height: 650px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+    overflow: hidden;
 }
 
-.brand-title {
-    font-size: 1.5rem;
+/* --- SOL PANEL --- */
+.welcome-section-full {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5D1826;
+}
+
+.side-image-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    position: absolute;
+}
+
+.welcome-overlay {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Logo Kutusu - Tam Yuvarlak ve Dolu */
+.brand-logo-circle {
+    width: 110px;
+    height: 110px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 15px;
+    overflow: hidden; /* Taşmayı engeller */
+    border: 3px solid rgba(255,255,255,0.3);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.brand-icon-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* İçini tam doldurur */
+}
+
+.brand-name-overlay {
+    font-family: 'Great Vibes', cursive;
+    font-size: 5rem;
+    color: #ffffff;
+    margin: 10px 0;
+}
+
+.brand-tagline {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+}
+
+.btn-shop-preview {
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 10px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+    transition: 0.3s;
+}
+
+.btn-shop-preview:hover {
+    background: white;
+    color: #5D1826;
+}
+
+/* --- SAĞ PANEL --- */
+.form-section-modern {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.form-container-premium {
+    width: 100%;
+    max-width: 380px;
+}
+
+.form-title-modern {
+    font-size: 2.2rem;
+    color: #5D1826;
     font-weight: 700;
-    color: var(--text-dark);
-    margin: 5px 0 0 0;
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    margin-bottom: 25px;
+    text-align: center;
 }
 
-.brand-slogan {
-    font-size: 0.8rem;
-    color: #888;
-    font-style: italic;
+.toggle-tabs-modern {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.tab-btn-modern {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px;
+    border: 1.5px solid #eee;
+    background: #fdfdfd;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tab-btn-modern.active {
+    background: #5D1826;
+    color: white;
+    border-color: #5D1826;
+}
+
+.row-inputs-modern {
+    display: flex;
+    gap: 12px;
     margin-bottom: 15px;
 }
 
-/* Toggle Butonlar */
-.role-toggle-container {
-    background-color: #f0f0f0;
-    border-radius: 25px;
-    padding: 4px;
-    display: flex;
-    margin-bottom: 20px;
-}
-
-.role-btn {
-    flex: 1;
-    border: none;
-    background: transparent;
-    padding: 8px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #777;
-    cursor: pointer;
-    transition: 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.role-btn.active {
-    background-color: var(--primary-bordo);
-    color: white;
-    box-shadow: 0 2px 8px rgba(93, 24, 38, 0.25);
-}
-
-/* Form Alanları */
-.input-wrapper {
+.input-group-modern {
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
+    width: 100%;
 }
 
-.input-icon {
+.icon-span {
     position: absolute;
-    left: 14px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #aaa;
-    font-size: 1rem;
-    transition: 0.3s;
+    color: #888;
+    display: flex;
+    align-items: center;
 }
 
-.custom-input {
+.input-group-modern input {
     width: 100%;
-    padding: 12px 12px 12px 40px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    transition: 0.3s;
-    background-color: #fafafa;
+    padding: 15px 15px 15px 45px;
+    border: 1.5px solid #eee;
+    border-radius: 12px;
+    font-family: 'Montserrat';
+    outline: none;
     box-sizing: border-box;
 }
 
-.custom-input:focus {
-    border-color: var(--primary-bordo);
-    background-color: white;
-    outline: none;
+.row-inputs-modern input {
+    padding-left: 15px;
 }
 
-.custom-input:focus + .input-icon {
-    color: var(--primary-bordo);
-}
-
-.row-inputs {
-    display: flex;
-    gap: 10px;
-}
-
-.col-half {
-    flex: 1;
-}
-
-/* Kayıt Butonu */
-.submit-btn {
-    width: 100%;
-    padding: 12px;
-    background-color: var(--primary-bordo);
-    color: white;
-    border: none;
+.error-box-modern {
+    background: #fff5f5;
+    color: #e63946;
+    padding: 10px;
     border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
-    margin-top: 8px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.submit-btn:hover {
-    background-color: #420f1a;
-    transform: translateY(-1px);
-}
-
-/* Alt Link */
-.footer-link {
-    text-align: center;
-    margin-top: 15px;
-    color: #666;
+    margin-bottom: 15px;
     font-size: 0.85rem;
+    text-align: center;
+    border: 1px solid #fed7d7;
 }
 
-.login-redirect {
-    color: var(--primary-bordo);
+.submit-btn-premium {
+    width: 100%;
+    background: #5D1826;
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.register-footer-modern {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.red-login-text {
+    color: #e63946;
     font-weight: 700;
     cursor: pointer;
     margin-left: 5px;
-    transition: 0.2s;
 }
 
-.login-redirect:hover {
-    color: var(--primary-gold);
-}
-
-.error-box {
-    background: #ffebee;
-    color: #c62828;
-    font-size: 0.8rem;
-    padding: 8px;
-    border-radius: 6px;
-    margin-bottom: 10px;
-    text-align: center;
+.red-login-text:hover {
+    text-decoration: underline;
 }

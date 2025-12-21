@@ -1,9 +1,10 @@
 package org.example.ehali.repository;
 
 import org.example.ehali.entity.Hali;
+import org.example.ehali.entity.Kategori;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-@Repository
 public interface HaliRepository extends JpaRepository<Hali, Long> {
+    List<Hali> findByKategoriIn(List<Kategori> kategoriler);
 }

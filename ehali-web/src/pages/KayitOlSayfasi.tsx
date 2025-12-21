@@ -1,22 +1,19 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaUser, FaEnvelope, FaLock, FaPhone, FaStore } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaStore, FaArrowRight, FaUserPlus } from "react-icons/fa";
+
+/* GÖRSEL VE LOGO İMPORTLARI */
+import arkaplanEhali from "../assets/arkaplan-ehali.png";
 import logo from "../assets/hali-logo.png";
+
 import "./KayitOlSayfasi.css";
 
 export default function KayitOlSayfasi() {
     const navigate = useNavigate();
-
-    const [aktifRol, setAktifRol] = useState<"USER" | "SATICI">("USER");
-    const [formData, setFormData] = useState({
-        ad: "",
-        soyad: "",
-        email: "",
-        sifre: "",
-        telefon: ""
-    });
-    const [hata, setHata] = useState<any>(""); // Nesne gelme ihtimaline karşı tip esnetildi
+    const [aktifRol, setAktifRol] = useState<"MUSTERI" | "SATICI">("MUSTERI");
+    const [formData, setFormData] = useState({ ad: "", soyad: "", email: "", sifre: "", telefon: "", adres: "" });
+    const [hata, setHata] = useState<string>("");
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -26,32 +23,27 @@ export default function KayitOlSayfasi() {
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
         if (loading) return;
-
         setHata("");
         setLoading(true);
 
-        const gonderilecekVeri = { ...formData, rol: aktifRol };
+        // 400 Bad Request hatasını önlemek için temiz payload yapısı
+        const payload = {
+            ad: formData.ad,
+            soyad: formData.soyad,
+            email: formData.email,
+            sifre: formData.sifre,
+            rol: aktifRol,
+            telefon: aktifRol === "SATICI" ? formData.telefon : "",
+            adres: aktifRol === "MUSTERI" ? formData.adres : ""
+        };
 
         try {
-            await axios.post("http://localhost:8383/api/auth/register", gonderilecekVeri);
-            alert(`${aktifRol === "USER" ? "Müşteri" : "Satıcı"} kaydı başarılı! Giriş yapabilirsiniz.`);
-            navigate("/");
+            await axios.post("http://localhost:8383/api/auth/register", payload);
+            alert(`${aktifRol === "MUSTERI" ? "Müşteri" : "Satıcı"} kaydı başarılı! Giriş sayfasına yönlendiriliyorsunuz.`);
+            navigate("/giris");
         } catch (error: any) {
-            console.error("Kayıt Hatası:", error);
-
-            // --- BEYAZ EKRAN HATASINI ÇÖZEN DÜZENLEME ---
-            const backendMesaji = error.response?.data;
-
-            if (error.response && error.response.status === 400) {
-                // Eğer mesaj bir nesne ise içindeki 'error' alanını al, yoksa stringe çevir
-                const gorunurHata = typeof backendMesaji === 'object'
-                    ? (backendMesaji.error || JSON.stringify(backendMesaji))
-                    : backendMesaji;
-
-                setHata(gorunurHata || "Bu e-posta adresi zaten kullanılıyor.");
-            } else {
-                setHata("Kayıt işlemi başarısız. Lütfen bilgileri kontrol edin.");
-            }
+            console.error("Kayıt Hatası Detayı:", error.response?.data);
+            setHata(error.response?.data?.message || "Kayıt sırasında bir hata oluştu. Bilgilerinizi kontrol edin.");
         } finally {
             setLoading(false);
         }
@@ -59,105 +51,91 @@ export default function KayitOlSayfasi() {
 
     return (
         <div className="register-body">
-            <div className="register-card">
+            <div className="main-card-premium">
 
-                <div className="register-header">
-                    <p className="welcome-script">Merhaba!</p>
-                    <img src={logo} alt="Carpyet Logo" className="brand-logo-img" />
-                    <h1 className="brand-title">Carpyet</h1>
-                    <p className="brand-slogan">Gelenekten Geleceğe Dokunuş</p>
+                {/* SOL PANEL - Logonun Eklendiği Bölüm */}
+                <div className="welcome-section-full">
+                    <img src={arkaplanEhali} alt="Arka Plan" className="side-image-cover" />
+                    <div className="welcome-overlay">
+                        <div className="brand-logo-circle">
+                            <img src={logo} alt="Carpyet Logo" className="brand-icon-img" />
+                        </div>
+                        <h1 className="brand-name-overlay">Carpyet</h1>
+                        <p className="brand-tagline">Gelenekten geleceğe uzanan eşsiz dokumalar.</p>
+                        <button type="button" className="btn-shop-preview" onClick={() => navigate("/")}>
+                            Mağazaya Göz At <FaArrowRight />
+                        </button>
+                    </div>
                 </div>
 
-                <div className="role-toggle-container">
-                    <button
-                        type="button"
-                        className={`role-btn ${aktifRol === "USER" ? "active" : ""}`}
-                        onClick={() => setAktifRol("USER")}
-                    >
-                        <FaUser /> Müşteri
-                    </button>
-                    <button
-                        type="button"
-                        className={`role-btn ${aktifRol === "SATICI" ? "active" : ""}`}
-                        onClick={() => setAktifRol("SATICI")}
-                    >
-                        <FaStore /> Satıcı
-                    </button>
+                {/* SAĞ PANEL - Form Alanı */}
+                <div className="form-section-modern">
+                    <div className="form-container-premium">
+                        <div className="form-header">
+                            <h2 className="form-title-modern">Yeni Hesap Oluştur</h2>
+                        </div>
+
+                        <div className="toggle-tabs-modern">
+                            <button
+                                type="button"
+                                className={`tab-btn-modern ${aktifRol === "MUSTERI" ? "active" : ""}`}
+                                onClick={() => setAktifRol("MUSTERI")}
+                            >
+                                <span className="icon-span"><FaUser /></span> Müşteri
+                            </button>
+                            <button
+                                type="button"
+                                className={`tab-btn-modern ${aktifRol === "SATICI" ? "active" : ""}`}
+                                onClick={() => setAktifRol("SATICI")}
+                            >
+                                <span className="icon-span"><FaStore /></span> Satıcı
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleRegister} className="stagger-form">
+                            {hata && <div className="error-box-modern">{hata}</div>}
+
+                            <div className="row-inputs-modern">
+                                <div className="input-group-modern half">
+                                    <input type="text" name="ad" placeholder="Ad" value={formData.ad} onChange={handleChange} required />
+                                </div>
+                                <div className="input-group-modern half">
+                                    <input type="text" name="soyad" placeholder="Soyad" value={formData.soyad} onChange={handleChange} required />
+                                </div>
+                            </div>
+
+                            <div className="input-group-modern">
+                                <span className="icon-span"><FaEnvelope /></span>
+                                <input type="email" name="email" placeholder="E-posta Adresi" value={formData.email} onChange={handleChange} required />
+                            </div>
+
+                            {aktifRol === "SATICI" ? (
+                                <div className="input-group-modern">
+                                    <span className="icon-span"><FaPhone /></span>
+                                    <input type="tel" name="telefon" placeholder="Telefon (05XX...)" value={formData.telefon} onChange={handleChange} required />
+                                </div>
+                            ) : (
+                                <div className="input-group-modern">
+                                    <span className="icon-span"><FaUserPlus /></span>
+                                    <input type="text" name="adres" placeholder="Teslimat Adresi" value={formData.adres} onChange={handleChange} required />
+                                </div>
+                            )}
+
+                            <div className="input-group-modern">
+                                <span className="icon-span"><FaLock /></span>
+                                <input type="password" name="sifre" placeholder="Şifre" value={formData.sifre} onChange={handleChange} required />
+                            </div>
+
+                            <button type="submit" className="submit-btn-premium" disabled={loading}>
+                                {loading ? "İşleniyor..." : "Kayıt Ol"}
+                            </button>
+                        </form>
+
+                        <div className="register-footer-modern">
+                            Zaten hesabın var mı? <span className="red-login-text" onClick={() => navigate("/giris")}>Giriş Yapın</span>
+                        </div>
+                    </div>
                 </div>
-
-                <form onSubmit={handleRegister}>
-                    <div className="row-inputs">
-                        <div className="col-half input-wrapper">
-                            <FaUser className="input-icon" />
-                            <input
-                                type="text" name="ad"
-                                className="custom-input"
-                                placeholder="Ad"
-                                value={formData.ad} onChange={handleChange} required
-                            />
-                        </div>
-                        <div className="col-half input-wrapper">
-                            <input
-                                type="text" name="soyad"
-                                className="custom-input"
-                                placeholder="Soyad"
-                                style={{ paddingLeft: '15px' }}
-                                value={formData.soyad} onChange={handleChange} required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="input-wrapper">
-                        <FaEnvelope className="input-icon" />
-                        <input
-                            type="email" name="email"
-                            className="custom-input"
-                            placeholder="E-Posta Adresi"
-                            value={formData.email} onChange={handleChange} required
-                        />
-                    </div>
-
-                    {aktifRol === "SATICI" && (
-                        <div className="input-wrapper">
-                            <FaPhone className="input-icon" />
-                            <input
-                                type="tel" name="telefon"
-                                className="custom-input"
-                                placeholder="Telefon Numarası (05XX...)"
-                                value={formData.telefon} onChange={handleChange} required
-                            />
-                        </div>
-                    )}
-
-                    <div className="input-wrapper">
-                        <FaLock className="input-icon" />
-                        <input
-                            type="password" name="sifre"
-                            className="custom-input"
-                            placeholder="Güçlü Bir Şifre"
-                            value={formData.sifre} onChange={handleChange} required
-                        />
-                    </div>
-
-                    {/* Hata gösterimi - Artık nesne gelse bile patlamaz */}
-                    {hata && <div className="error-box">{hata.toString()}</div>}
-
-                    <button
-                        type="submit"
-                        className="submit-btn"
-                        disabled={loading}
-                    >
-                        {loading ? "İşleniyor..." : "KAYIT OL"}
-                    </button>
-                </form>
-
-                <div className="footer-link">
-                    Zaten hesabın var mı?
-                    <span className="login-redirect" onClick={() => navigate("/")}>
-                        Giriş Yap
-                    </span>
-                </div>
-
             </div>
         </div>
     );

@@ -22,14 +22,14 @@ public class BilesikKategori implements KategoriBileseni {
 
     @Override
     public String getAd() {
-        return this.ad;
+        return ad;
     }
 
     @Override
     public void yazdir() {
-        System.out.println("+ " + getAd());
-        for (KategoriBileseni kategori : altKategoriler) {
-            kategori.yazdir();
+        System.out.println("+ " + ad);
+        for (KategoriBileseni alt : altKategoriler) {
+            alt.yazdir();
         }
     }
 }

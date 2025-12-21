@@ -10,10 +10,18 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+
     private String ad;
     private String soyad;
     private String email;
     private String sifre;
-    private String rol;    // String olarak alıp Service içinde Enum'a çevirmek en güvenlisidir
-    private String telefon; // Satici kaydı için gerekli alan eklendi
+
+    // Frontend'den (React) gelecek rol bilgisi (MUSTERI veya SATICI)
+    private Object rol;
+
+    // Müşteriler için gerekli alan
+    private String adres;
+
+    // Satıcılar için gerekli alan
+    private String telefon;
 }

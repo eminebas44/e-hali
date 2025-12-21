@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/kategoriler")
+@CrossOrigin(origins = "http://localhost:5174") // React uygulamanın portu (CORS çözümü)
 public class KategoriController {
 
     private final KategoriService kategoriService;
@@ -20,6 +21,7 @@ public class KategoriController {
         this.kategoriService = kategoriService;
     }
 
+    // React tarafındaki kategori butonlarını besleyecek ana endpoint
     @GetMapping
     public ResponseEntity<List<Kategori>> getAllKategoriler() {
         List<Kategori> kategoriler = kategoriService.findAll();

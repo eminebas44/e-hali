@@ -1,11 +1,8 @@
 package org.example.ehali.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 
 @Data
@@ -25,22 +22,10 @@ public class Satici {
     @JoinColumn(name = "kullanici_id", referencedColumnName = "id")
     private Kullanici kullanici;
 
-    @Column(name = "ad", nullable = false, length = 100)
-    private String ad;
-
-    @Column(name = "soyad", nullable = false, length = 100)
-    private String soyad;
-
     @Column(name = "telefon", length = 20)
     private String telefon;
 
-    @Column(name = "kayit_tarihi")
+    @CreationTimestamp
+    @Column(name = "kayit_tarihi", updatable = false)
     private LocalDate kayitTarihi;
-
-    @PrePersist
-    protected void onCreate() {
-        if (kayitTarihi == null) {
-            kayitTarihi = LocalDate.now();
-        }
-    }
 }

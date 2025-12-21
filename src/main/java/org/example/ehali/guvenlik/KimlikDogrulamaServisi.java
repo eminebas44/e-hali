@@ -39,7 +39,7 @@ public class KimlikDogrulamaServisi {
             kullaniciRolu = Rol.valueOf(istek.getRol().toUpperCase());
         } catch (Exception e) {
             // Eğer "a", "b" gibi geçersiz bir şey gelirse varsayılan USER yap
-            kullaniciRolu = Rol.USER;
+            kullaniciRolu = Rol.MUSTERI;
         }
 
         // 2. KULLANICIYI OLUŞTUR (Builder Kullanarak)

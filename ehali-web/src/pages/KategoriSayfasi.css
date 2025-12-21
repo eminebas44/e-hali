@@ -1,0 +1,108 @@
+.premium-catalog-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 20px 100px 20px;
+    background: #fff;
+}
+
+.brand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.brand-wrap { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.brand-icon { width: 45px; height: 45px; }
+.name-main { font-size: 1.4rem; font-weight: 900; letter-spacing: 3px; color: #1a1a1a; }
+.name-sub { font-size: 0.6rem; letter-spacing: 2px; color: #D4AF37; font-weight: 700; }
+
+.nav-back-btn {
+    background: transparent;
+    border: 1px solid #ddd;
+    padding: 8px 18px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.title-block { text-align: center; margin: 60px 0; }
+.line-dec { width: 40px; height: 1px; background: #D4AF37; margin: 0 auto 15px; }
+.main-cat-title { font-family: 'Cinzel', serif; font-size: 2.4rem; color: #1a1a1a; letter-spacing: 6px; }
+.main-cat-title span { color: #5D1826; font-weight: 700; }
+.sub-cat-text { font-size: 0.85rem; color: #aaa; margin-top: 10px; font-style: italic; }
+
+.catalog-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.catalog-card {
+    display: flex;
+    background: #fff;
+    border: 1px solid #eeeeee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    height: 400px; /* Boydan senin isteğine göre bir tık daha daralttım */
+}
+
+.catalog-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+    transform: translateY(-5px);
+}
+
+.catalog-img-side { flex: 1; position: relative; overflow: hidden; }
+.catalog-img-side img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s ease; }
+.catalog-card:hover .catalog-img-side img { transform: scale(1.08); }
+
+.floating-tags { position: absolute; top: 15px; left: 15px; right: 15px; display: flex; justify-content: space-between; }
+.puan-tag { background: white; padding: 4px 8px; font-size: 0.7rem; font-weight: 900; border-radius: 4px; }
+.wish-btn { background: white; border: none; width: 32px; height: 32px; border-radius: 50%; color: #ddd; cursor: pointer; }
+
+.catalog-info-side { flex: 1.1; padding: 25px 30px; display: flex; flex-direction: column; }
+.cat-tag { font-size: 0.65rem; font-weight: 900; color: #D4AF37; letter-spacing: 2px; }
+.stock-tag { font-size: 0.65rem; color: #ccc; }
+.hali-name-text { font-family: 'Cinzel', serif; font-size: 1.3rem; font-weight: 700; color: #1a1a1a; margin: 10px 0 5px 0; }
+.origin-text { font-size: 0.8rem; color: #999; margin-bottom: 15px; }
+
+.tech-specs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    padding: 15px 0; border-top: 1px solid #f9f9f9; border-bottom: 1px solid #f9f9f9;
+}
+.spec-unit span { font-size: 0.55rem; color: #bbb; text-transform: uppercase; }
+.spec-unit strong { font-size: 0.8rem; color: #444; font-weight: 700; }
+
+.info-bottom {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 25px; /* Mesafe eklendi */
+}
+
+.price-wrap .price { font-size: 1.5rem; color: #1a1a1a; font-weight: 800; }
+
+.add-to-cart-lux {
+    background: #1a1a1a;
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    border-radius: 50px; /* Tam oval */
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.add-to-cart-lux:hover { background: #5D1826; transform: translateY(-2px); }
+
+.loading-screen { height: 80vh; display: flex; justify-content: center; align-items: center; font-family: 'Cinzel'; letter-spacing: 5px; color: #5D1826; }
+
+@media (max-width: 950px) {
+    .catalog-grid { grid-template-columns: 1fr; }
+    .catalog-card { flex-direction: column; height: auto; }
+}

@@ -10,33 +10,39 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Builder // <-- İŞTE BU EKSİKTİ, O YÜZDEN HATA ALDIN
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "kullanici")
+@Table(name = "kullanici") // Veritabanında tekil isim kullanıyoruz
 public class Kullanici implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String ad;      // Yeni eklediğimiz alan
-    private String soyad;   // Yeni eklediğimiz alan
+    @Column(nullable = false, length = 100)
+    private String ad;
 
-    @Column(unique = true) // Aynı mail ile 2 kişi kayıt olamasın
+    @Column(nullable = false, length = 100)
+    private String soyad;
+
+    @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String sifre;
 
     @Enumerated(EnumType.STRING)
-    private Rol rol;
+    @Column(nullable = false)
+    private Rol rol; // ADMIN, MUSTERI, SATICI
 
     // --- UserDetails Metodları (Spring Security İçin) ---
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(rol.name()));
+        // Kullanıcının rolünü Spring Security'nin anlayacağı formata çeviriyoruz
+        return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 
     @Override
@@ -46,7 +52,7 @@ public class Kullanici implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return email; // Giriş yaparken email kullanacağız
     }
 
     @Override

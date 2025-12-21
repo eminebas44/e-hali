@@ -1,7 +1,7 @@
 package org.example.ehali.entity;
 
 public enum Rol {
-    USER,
-    ADMIN,
-    SATICI
+    ADMIN,    // Uygulama Yöneticisi
+    MUSTERI,  // Müşteri
+    SATICI    // Satıcı
 }

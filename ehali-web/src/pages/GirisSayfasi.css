@@ -1,169 +1,227 @@
-/* 1. Google Fonts'tan Premium Fontları Çekiyoruz */
-@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;500;600;700&display=swap');
 
-/* 2. Sayfa Genel Ayarları */
+/* Sayfa Genel */
 .login-body {
-    height: 100vh; /* Tüm ekranı kapla */
+    height: 100vh;
     display: flex;
-    justify-content: center; /* Yatay ortala */
-    align-items: center; /* Dikey ortala */
-    background-color: #5D1826; /* Marka Rengi: Bordo */
-    font-family: 'Montserrat', sans-serif; /* Genel yazı tipi */
-    position: relative;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #5D1826 0%, #2d0b12 100%);
+    font-family: 'Montserrat', sans-serif;
     margin: 0;
 }
 
-/* 3. Beyaz Giriş Kartı */
-.login-container {
-    background-color: white;
+/* Ana Kart Yapısı */
+.main-card {
+    display: flex;
+    width: 900px;
+    height: 600px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    overflow: hidden;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Sol Karşılama Alanı */
+.welcome-section {
+    flex: 1;
+    background: linear-gradient(rgba(93, 24, 38, 0.85), rgba(93, 24, 38, 0.95)),
+    url('https://images.unsplash.com/photo-1576016773322-bf9129987713?auto=format&fit=crop&q=80');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
     padding: 40px;
-    border-radius: 24px; /* Köşeleri yumuşat */
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3); /* Derin gölge */
-    width: 100%;
-    max-width: 380px;
     text-align: center;
 }
 
-/* 4. Logo ve Marka Alanı */
-.logo-section {
-    margin-bottom: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.logo-img {
-    width: 90px;
-    height: 90px;
-    object-fit: contain;
-    border-radius: 50%;
-    border: 3px solid #5D1826;
-    padding: 5px;
-    background: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* YENİ: Estetik Marka İsmi */
-.brand-name {
-    font-family: 'Great Vibes', cursive;
-    color: #5D1826;
-    font-size: 3.5rem;
-    margin: 10px 0 0 0;
-    line-height: 1.2;
-    text-shadow: 2px 2px 4px rgba(93, 24, 38, 0.1);
-}
-
-/* YENİ: Modern Slogan */
-.slogan {
-    font-family: 'Montserrat', sans-serif;
-    color: #888;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase; /* Büyük harf */
-    letter-spacing: 3px; /* Harf aralığı */
-    margin-top: 5px;
-    margin-bottom: 10px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
+/* DAİRESEL LOGO STİLİ */
+.logo-wrapper {
     display: inline-block;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    margin-bottom: 20px;
+    border: 2px solid white;
 }
 
-/* 5. Sekmeler (Müşteri - Satıcı) */
-.toggle-container {
-    background-color: #f4f4f4;
+.welcome-logo-circular {
+    width: 110px;
+    height: 110px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+    background: white; /* Logo arkası temiz görünmesi için */
+}
+
+.brand-name-large {
+    font-family: 'Great Vibes', cursive;
+    font-size: 4.5rem;
+    margin: 0;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+}
+
+.welcome-text {
+    font-size: 1rem;
+    font-weight: 300;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+.divider {
+    width: 60px;
+    height: 2px;
+    background: #D4AF37;
+    margin: 25px auto;
+}
+
+.slogan-light {
+    letter-spacing: 4px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.7;
+}
+
+.btn-learn-more {
+    margin-top: 30px;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 10px 30px;
     border-radius: 50px;
-    padding: 5px;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    transition: 0.3s;
+}
+
+.btn-learn-more:hover {
+    background: white;
+    color: #5D1826;
+    transform: translateY(-2px);
+}
+
+/* Sağ Form Alanı */
+.form-section {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: #ffffff;
+}
+
+.form-container {
+    width: 100%;
+    max-width: 320px;
+}
+
+.login-title {
+    color: #5D1826;
+    font-weight: 700;
+    margin-bottom: 30px;
+    font-size: 2rem;
+    text-align: center;
+}
+
+/* Toggle Switch */
+.toggle-container {
+    background: #f4f4f4;
+    border-radius: 15px;
     display: flex;
     margin-bottom: 25px;
+    padding: 5px;
 }
 
 .toggle-btn {
     flex: 1;
     border: none;
-    background: transparent;
     padding: 12px;
-    border-radius: 50px;
-    cursor: pointer;
+    border-radius: 12px;
     font-weight: 600;
-    color: #777;
     font-family: 'Montserrat', sans-serif;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
+    cursor: pointer;
+    transition: 0.3s;
+    background: transparent;
+    color: #777;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px; /* İkon ile yazı arası boşluk */
+    gap: 8px;
 }
 
 .toggle-btn.active {
-    background-color: #5D1826;
+    background: #5D1826;
     color: white;
-    box-shadow: 0 4px 12px rgba(93, 24, 38, 0.3);
+    box-shadow: 0 4px 10px rgba(93, 24, 38, 0.2);
 }
 
-/* 6. Form Alanları */
+/* Inputlar */
 .input-group {
     position: relative;
     margin-bottom: 15px;
-    display: flex;
-    align-items: center;
 }
 
 .input-icon {
     position: absolute;
     left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
     color: #5D1826;
-    z-index: 1;
-    font-size: 1.1rem;
 }
 
 .input-group input {
     width: 100%;
-    padding: 14px 15px 14px 45px; /* İkon boşluğu */
+    padding: 14px 15px 14px 45px;
     border: 1px solid #e0e0e0;
     border-radius: 12px;
-    background-color: #f9f9f9;
-    outline: none;
-    font-size: 0.95rem;
+    background: #fdfdfd;
     font-family: 'Montserrat', sans-serif;
+    outline: none;
     transition: 0.3s;
+    box-sizing: border-box;
 }
 
 .input-group input:focus {
     border-color: #5D1826;
-    background-color: white;
     box-shadow: 0 0 0 3px rgba(93, 24, 38, 0.1);
 }
 
-/* 7. Giriş Butonu */
 .btn-giris {
     width: 100%;
-    background-color: #5D1826;
+    background: #5D1826;
     color: white;
     border: none;
     padding: 14px;
     border-radius: 12px;
-    font-size: 1rem;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
+    transition: 0.3s;
     margin-top: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-family: 'Montserrat', sans-serif;
-    transition: transform 0.2s, background-color 0.2s;
 }
 
 .btn-giris:hover {
-    background-color: #4a131e;
+    background: #4a131e;
     transform: translateY(-2px);
 }
 
-/* 8. Alt Linkler */
-.footer-text {
-    margin-top: 20px;
+.error-msg {
+    background: #ff4757;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 15px;
     font-size: 0.85rem;
+    text-align: center;
+}
+
+.footer-text {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 0.9rem;
     color: #666;
 }
 
@@ -172,61 +230,40 @@
     font-weight: 700;
     cursor: pointer;
     margin-left: 5px;
-    transition: color 0.2s;
 }
 
-.register-link:hover {
-    color: #802235;
-    text-decoration: underline;
-}
-
-/* 9. Sağ Alt Köşe Admin Butonu (Glassmorphism) */
+/* Admin Butonu */
 .admin-access-btn {
     position: fixed;
     bottom: 25px;
     right: 25px;
-    background-color: rgba(255, 255, 255, 0.15); /* Şeffaf beyaz */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.9);
+    color: white;
     padding: 10px 20px;
     border-radius: 50px;
     cursor: pointer;
     font-size: 0.85rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(5px); /* Arka planı bulanıklaştır */
+    transition: 0.3s;
 }
 
 .admin-access-btn:hover {
-    background-color: white;
+    background: white;
     color: #5D1826;
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
 }
 
-/* Mobil Uyumluluk */
-@media (max-width: 480px) {
-    .login-container {
-        max-width: 90%;
-        padding: 30px 20px;
-    }
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    .brand-name {
-        font-size: 2.8rem;
+/* Mobil */
+@media (max-width: 900px) {
+    .main-card {
+        width: 90%;
+        height: auto;
+        flex-direction: column;
     }
-
-    .admin-access-btn {
-        bottom: 15px;
-        right: 50%;
-        transform: translateX(50%); /* Mobilde ortala */
-        width: max-content;
-        background-color: rgba(0, 0, 0, 0.2); /* Mobilde daha görünür olsun */
-    }
-
-    .admin-access-btn:hover {
-        transform: translateX(50%) translateY(-3px);
-    }
+    .welcome-section { padding: 40px 20px; }
 }

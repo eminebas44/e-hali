@@ -28,8 +28,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // <--- CORS BURADA AKTİF EDİLDİ
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Herkese Açık Yollar (Giriş yapmadan görülebilir)
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/halilar/**",
@@ -38,6 +39,19 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html"
                         ).permitAll()
+
+                        // 2. Sadece SATICI'lara Özel Yollar
+                        // (Örneğin: Ürün ekleme, stok güncelleme)
+                        .requestMatchers("/api/satici/**").hasRole("SATICI")
+
+                        // 3. Sadece MUSTERI'lere Özel Yollar
+                        // (Örneğin: Sipariş verme, sepetim)
+                        .requestMatchers("/api/musteri/**").hasRole("MUSTERI")
+
+                        // 4. Sadece ADMIN'e Özel Yollar
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // 5. Geri kalan tüm istekler için sadece giriş yapmış olmak yeterli
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -47,16 +61,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // --- React İçin İzin Ayarları ---
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // React'ın çalıştığı adresler (Vite genelde 5173 kullanır)
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+        // React portların (5174 ve 5173'ü ekleyelim, Vite bazen değişebilir)
+        configuration.setAllowedOrigins(List.of("http://localhost:5174",  "http://localhost:3000"));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
+        configuration.setAllowCredentials(true); // Token bazlı işlemler için önemli
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
