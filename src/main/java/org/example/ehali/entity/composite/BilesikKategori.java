@@ -20,6 +20,10 @@ public class BilesikKategori implements KategoriBileseni {
         altKategoriler.remove(kategori);
     }
 
+    public List<KategoriBileseni> getAltKategoriler() {
+        return altKategoriler;
+    }
+
     @Override
     public String getAd() {
         return ad;
