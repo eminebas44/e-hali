@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class KullaniciTest {
 
-    @Test
+@SpringBootTest
+@ActiveProfiles("test")
     void kullaniciOlusturmaTesti() {
         Kullanici kullanici = Kullanici.builder()
                 .id(1L)
@@ -23,7 +24,8 @@ class KullaniciTest {
         assertNotNull(kullanici.getId());
     }
 
-    @Test
+@SpringBootTest
+@ActiveProfiles("test")
     void yetkiKontrolTesti() {
         Kullanici kullanici = Kullanici.builder()
                 .rol(Rol.ADMIN)
