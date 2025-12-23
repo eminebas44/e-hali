@@ -1,24 +1,42 @@
-version: '3.8'
+version: "3.9"
+
 services:
-  db:
+  ehali-db:
     image: postgres:15
     container_name: ehali-db
     environment:
-      POSTGRES_DB: ehali_db
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ehali
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
+    volumes:
+      - ehali-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ehali"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
-  app:
+  ehali-backend-app:
     build: .
     container_name: ehali-backend-app
-    ports:
-      - "8080:8080"
     depends_on:
-      - db
+      ehali-db:
+        condition: service_healthy
+    ports:
+      - "8180:8383"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/ehali_db
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: password
+      SPRING_DATASOURCE_URL: jdbc:postgresql://ehali-db:5432/ehali
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+
+      SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SERVER_PORT: 8383
+    restart: unless-stopped
+
+volumes:
+  ehali-db-data:

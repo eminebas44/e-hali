@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    tools {
+        maven 'Maven3'
+    }
+
     stages {
         stage('1- Checkout') {
             steps {
@@ -8,12 +13,12 @@ pipeline {
         }
         stage('2- Build') {
             steps {
-                sh './mvnw clean compile -DskipTests'
+                bat 'mvn clean compile -DskipTests'
             }
         }
         stage('3- Unit Tests') {
             steps {
-                sh './mvnw test'
+                bat 'mvn test'
             }
             post {
                 always {
@@ -23,13 +28,13 @@ pipeline {
         }
         stage('4- Integration Tests') {
             steps {
-                sh './mvnw verify -DskipUnitTests'
+                bat 'mvn verify -DskipUnitTests'
             }
         }
         stage('5- Docker Run') {
             steps {
-                sh 'docker-compose down'
-                sh 'docker-compose up --build -d'
+                bat 'docker-compose down'
+                bat 'docker-compose up --build -d'
             }
         }
     }
