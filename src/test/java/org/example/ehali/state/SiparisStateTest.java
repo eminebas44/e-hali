@@ -6,8 +6,9 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SiparisStateTest {
-
-    @Test
+    
+@SpringBootTest
+@ActiveProfiles("test")
     void siparisBaslangicDurumuTesti() {
         Siparis siparis = new Siparis();
 
@@ -15,7 +16,8 @@ class SiparisStateTest {
         assertEquals("Beklemede", siparis.getDurumAdi());
     }
 
-    @Test
+  @SpringBootTest
+@ActiveProfiles("test")
     void sonrakiDurumGecisTesti() {
         Siparis siparis = new Siparis();
         siparis.sonrakiDurum();
@@ -24,7 +26,8 @@ class SiparisStateTest {
         assertNotEquals("Beklemede", siparis.getDurumAdi());
     }
 
-    @Test
+@SpringBootTest
+@ActiveProfiles("test")
     void siparisIptalEtmeTesti() {
         Siparis siparis = new Siparis();
         siparis.iptalEt();
@@ -32,7 +35,8 @@ class SiparisStateTest {
         assertEquals("İptal Edildi", siparis.getDurumAdi());
     }
 
-    @Test
+@SpringBootTest
+@ActiveProfiles("test")
     void siparisTutarVeVeriTesti() {
         Siparis siparis = new Siparis();
         BigDecimal tutar = new BigDecimal("1500.50");
