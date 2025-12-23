@@ -6,8 +6,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BilesikKategoriTest {
-
-    @Test
+    
+@SpringBootTest
+@ActiveProfiles("test")
     void altKategoriEklemeTesti() {
         BilesikKategori anaKategori = new BilesikKategori("Halılar");
 
