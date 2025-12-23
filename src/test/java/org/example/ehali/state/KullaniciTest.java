@@ -3,12 +3,12 @@ package org.example.ehali.state;
 import org.example.ehali.entity.Kullanici;
 import org.example.ehali.entity.Rol;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class KullaniciTest {
 
-@SpringBootTest
-@ActiveProfiles("test")
+    @Test
     void kullaniciOlusturmaTesti() {
         Kullanici kullanici = Kullanici.builder()
                 .id(1L)
@@ -24,8 +24,7 @@ class KullaniciTest {
         assertNotNull(kullanici.getId());
     }
 
-@SpringBootTest
-@ActiveProfiles("test")
+    @Test
     void yetkiKontrolTesti() {
         Kullanici kullanici = Kullanici.builder()
                 .rol(Rol.ADMIN)
