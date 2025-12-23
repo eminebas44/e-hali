@@ -5,7 +5,9 @@ import org.example.ehali.entity.decorator.HaliDecorator;
 import org.example.ehali.entity.decorator.KaymazTabanDecorator;
 import org.example.ehali.entity.decorator.LekeTutmazKaplamaDecorator;
 import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class HaliDecoratorTest {
@@ -21,16 +23,14 @@ class HaliDecoratorTest {
             return "Standart Halı";
         }
     };
-    
-@SpringBootTest
-@ActiveProfiles("test")
+
+    @Test
     void kaymazTabanFiyatArtisiTesti() {
         HaliDecorator hali = new KaymazTabanDecorator(testHalisi);
         assertEquals(new BigDecimal("1150.00"), hali.getFiyat());
     }
 
-  @SpringBootTest
-@ActiveProfiles("test")
+    @Test
     void lekeTutmazAciklamaTesti() {
         HaliDecorator hali = new LekeTutmazKaplamaDecorator(testHalisi);
         assertTrue(hali.getAciklama().contains("Leke Tutmaz"));
