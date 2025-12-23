@@ -3,12 +3,12 @@ package org.example.ehali.composite;
 import org.example.ehali.entity.composite.BilesikKategori;
 import org.example.ehali.entity.composite.KategoriBileseni;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class BilesikKategoriTest {
-    
-@SpringBootTest
-@ActiveProfiles("test")
+
+    @Test
     void altKategoriEklemeTesti() {
         BilesikKategori anaKategori = new BilesikKategori("Halılar");
 
@@ -17,9 +17,6 @@ class BilesikKategoriTest {
 
         anaKategori.ekle(cocuk1);
         anaKategori.ekle(cocuk2);
-
-
-
 
         assertEquals(2, anaKategori.getAltKategoriler().size());
     }
