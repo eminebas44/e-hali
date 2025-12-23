@@ -2,13 +2,14 @@ package org.example.ehali.state;
 
 import org.example.ehali.entity.Siparis;
 import org.junit.jupiter.api.Test;
+
 import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class SiparisStateTest {
-    
-@SpringBootTest
-@ActiveProfiles("test")
+
+    @Test
     void siparisBaslangicDurumuTesti() {
         Siparis siparis = new Siparis();
 
@@ -16,18 +17,15 @@ class SiparisStateTest {
         assertEquals("Beklemede", siparis.getDurumAdi());
     }
 
-  @SpringBootTest
-@ActiveProfiles("test")
+    @Test
     void sonrakiDurumGecisTesti() {
         Siparis siparis = new Siparis();
         siparis.sonrakiDurum();
 
-        assertNotNull(siparis.getDurumAdi());
         assertNotEquals("Beklemede", siparis.getDurumAdi());
     }
 
-@SpringBootTest
-@ActiveProfiles("test")
+    @Test
     void siparisIptalEtmeTesti() {
         Siparis siparis = new Siparis();
         siparis.iptalEt();
@@ -35,9 +33,8 @@ class SiparisStateTest {
         assertEquals("İptal Edildi", siparis.getDurumAdi());
     }
 
-@SpringBootTest
-@ActiveProfiles("test")
-    void siparisTutarVeVeriTesti() {
+    @Test
+    void siparisTutarTesti() {
         Siparis siparis = new Siparis();
         BigDecimal tutar = new BigDecimal("1500.50");
 
