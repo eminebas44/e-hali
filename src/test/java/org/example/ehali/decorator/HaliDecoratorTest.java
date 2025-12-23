@@ -21,14 +21,16 @@ class HaliDecoratorTest {
             return "Standart Halı";
         }
     };
-
-    @Test
+    
+@SpringBootTest
+@ActiveProfiles("test")
     void kaymazTabanFiyatArtisiTesti() {
         HaliDecorator hali = new KaymazTabanDecorator(testHalisi);
         assertEquals(new BigDecimal("1150.00"), hali.getFiyat());
     }
 
-    @Test
+  @SpringBootTest
+@ActiveProfiles("test")
     void lekeTutmazAciklamaTesti() {
         HaliDecorator hali = new LekeTutmazKaplamaDecorator(testHalisi);
         assertTrue(hali.getAciklama().contains("Leke Tutmaz"));
