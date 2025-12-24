@@ -2,6 +2,7 @@ package org.example.ehali.entity;
 
 import jakarta.persistence.*;
 import org.example.ehali.entity.state.BeklemedeDurumu;
+import org.example.ehali.entity.state.SiparisDurumu; // KRİTİK: Bu satırı ekledik
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,7 +30,7 @@ public class Siparis {
     private String durumAdi;
 
     @Transient
-    private SiparisDurumu durum;
+    private SiparisDurumu durum; // Artık hata vermez
 
     public Siparis() {
         this.durum = new BeklemedeDurumu();
