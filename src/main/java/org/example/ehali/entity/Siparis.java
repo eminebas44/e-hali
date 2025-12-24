@@ -1,8 +1,9 @@
 package org.example.ehali.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // Kritik Import
 import jakarta.persistence.*;
 import org.example.ehali.entity.state.BeklemedeDurumu;
-import org.example.ehali.entity.state.SiparisDurumu; // KRİTİK: Bu satırı ekledik
+import org.example.ehali.entity.state.SiparisDurumu;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,8 +30,9 @@ public class Siparis {
     @Column(name = "durum", length = 50)
     private String durumAdi;
 
+    @JsonIgnore // JSON serileştirme hatasını engelleyen sihirli satır
     @Transient
-    private SiparisDurumu durum; // Artık hata vermez
+    private SiparisDurumu durum;
 
     public Siparis() {
         this.durum = new BeklemedeDurumu();
@@ -38,12 +40,20 @@ public class Siparis {
     }
 
     public void sonrakiDurum() {
-        durum.sonrakiDurum(this);
+        if (durum != null) {
+            durum.sonrakiDurum(this);
+            this.durumAdi = durum.getDurumAdi(); // Veritabanı adını güncelle
+        }
     }
 
     public void iptalEt() {
-        durum.iptalEt(this);
+        if (durum != null) {
+            durum.iptalEt(this);
+            this.durumAdi = durum.getDurumAdi(); // Veritabanı adını güncelle
+        }
     }
+
+    // --- Getter ve Setterlar ---
 
     public Long getSiparisId() {
         return siparisId;
@@ -91,6 +101,9 @@ public class Siparis {
 
     public void setDurum(SiparisDurumu durum) {
         this.durum = durum;
+        if (durum != null) {
+            this.durumAdi = durum.getDurumAdi(); // Senkronizasyon
+        }
     }
 
     @PrePersist
@@ -98,8 +111,7 @@ public class Siparis {
         if (siparisTarihi == null) {
             siparisTarihi = LocalDate.now();
         }
-        if (this.durumAdi == null) {
-            this.durum = new BeklemedeDurumu();
+        if (this.durumAdi == null && this.durum != null) {
             this.durumAdi = this.durum.getDurumAdi();
         }
     }
