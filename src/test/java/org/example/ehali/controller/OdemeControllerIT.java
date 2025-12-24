@@ -19,13 +19,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc(addFilters = false) // Güvenlik filtrelerini kapatır
 @ActiveProfiles("test")
 @Transactional
 public class OdemeControllerIT {
 
     @Autowired private MockMvc mockMvc;
-    @Autowired private OdemeRepository odemeRepository;
     @Autowired private SiparisRepository siparisRepository;
     @Autowired private KullaniciRepository kullaniciRepository;
     @Autowired private MusteriRepository musteriRepository;
@@ -36,8 +35,8 @@ public class OdemeControllerIT {
     @BeforeEach
     void setUp() {
         Kullanici k = new Kullanici();
-        k.setAd("C"); k.setSoyad("D");
-        k.setEmail("controller" + System.nanoTime() + "@test.com");
+        k.setAd("Test"); k.setSoyad("User");
+        k.setEmail("pay" + System.nanoTime() + "@test.com");
         k.setSifre("123"); k.setRol(Rol.MUSTERI);
         k = kullaniciRepository.save(k);
 
@@ -53,10 +52,14 @@ public class OdemeControllerIT {
 
     @Test
     void createOdeme_YeniOdemeOlusturmali() throws Exception {
-        // setupSiparis'i kullandık çünkü setUp içinde her seferinde temizleniyor
         Odeme yeni = new Odeme();
         yeni.setTutar(BigDecimal.valueOf(100.00));
-        yeni.setSiparis(setupSiparis);
+
+        // Sadece ID'si olan temiz bir Siparis nesnesi gönderiyoruz
+        // ki Jackson yetki (Authority) hatası vermesin
+        Siparis gonderilecekSiparis = new Siparis();
+        gonderilecekSiparis.setSiparisId(setupSiparis.getSiparisId());
+        yeni.setSiparis(gonderilecekSiparis);
 
         mockMvc.perform(post("/api/odemeler")
                         .contentType(MediaType.APPLICATION_JSON)

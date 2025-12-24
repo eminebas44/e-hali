@@ -1,5 +1,6 @@
 package org.example.ehali.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // Bu satır yeni eklendi
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "kullanici") // Veritabanında tekil isim kullanıyoruz
+@Table(name = "kullanici")
 public class Kullanici implements UserDetails {
 
     @Id
@@ -39,9 +40,9 @@ public class Kullanici implements UserDetails {
 
     // --- UserDetails Metodları (Spring Security İçin) ---
 
+    @JsonIgnore // Bu satır yeni eklendi: JSON serileştirmesi sırasında hatayı engeller
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Kullanıcının rolünü Spring Security'nin anlayacağı formata çeviriyoruz
         return List.of(new SimpleGrantedAuthority("ROLE_" + rol.name()));
     }
 
@@ -52,7 +53,7 @@ public class Kullanici implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email; // Giriş yaparken email kullanacağız
+        return email;
     }
 
     @Override
