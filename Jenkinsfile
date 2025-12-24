@@ -14,7 +14,7 @@ pipeline {
 
         stage('2- Build') {
             steps {
-                bat 'mvn clean compile -DskipTests'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
@@ -49,7 +49,7 @@ pipeline {
 
         stage('6- Selenium System Tests') {
             steps {
-                echo 'Selenium testleri bu asamada kosulacak (Su an hazirlik asamasinda)'
+                echo 'Selenium testleri bu asamada kosulacak'
             }
         }
     }
