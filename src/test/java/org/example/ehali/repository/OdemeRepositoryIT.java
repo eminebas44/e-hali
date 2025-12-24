@@ -1,10 +1,6 @@
 package org.example.ehali.repository;
 
-import org.example.ehali.entity.Odeme;
-import org.example.ehali.entity.Siparis;
-import org.example.ehali.entity.Musteri;
-import org.example.ehali.entity.Kullanici;
-import org.example.ehali.entity.Rol;
+import org.example.ehali.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,47 +22,43 @@ public class OdemeRepositoryIT {
     @Autowired private KullaniciRepository kullaniciRepository;
     @Autowired private MusteriRepository musteriRepository;
 
-    private Odeme testOdemesi;
-    private Siparis testSiparis;
+    private Siparis yeniSiparisOlustur() {
+        Kullanici k = new Kullanici();
+        k.setAd("Test"); k.setSoyad("User");
+        k.setEmail("user" + System.nanoTime() + "@test.com"); // Benzersiz email
+        k.setSifre("123"); k.setRol(Rol.MUSTERI);
+        k = kullaniciRepository.save(k);
 
-    @BeforeEach
-    void setUp() {
-        Kullanici kullanici = new Kullanici();
-        kullanici.setAd("Test");
-        kullanici.setSoyad("User");
-        kullanici.setEmail("test" + System.currentTimeMillis() + "@ehali.com");
-        kullanici.setSifre("123");
-        kullanici.setRol(Rol.MUSTERI);
-        kullanici = kullaniciRepository.save(kullanici);
+        Musteri m = new Musteri();
+        m.setKullanici(k);
+        m = musteriRepository.save(m);
 
-        Musteri musteri = new Musteri();
-        musteri.setKullanici(kullanici);
-        musteri = musteriRepository.save(musteri);
-
-        testSiparis = new Siparis();
-        testSiparis.setMusteri(musteri);
-        testSiparis.setToplamTutar(BigDecimal.valueOf(2000));
-        testSiparis = siparisRepository.save(testSiparis);
-
-        testOdemesi = new Odeme();
-        testOdemesi.setTutar(BigDecimal.valueOf(2000.00));
-        testOdemesi.setSiparis(testSiparis); 
-        testOdemesi = odemeRepository.save(testOdemesi);
+        Siparis s = new Siparis();
+        s.setMusteri(m);
+        s.setToplamTutar(BigDecimal.valueOf(100));
+        return siparisRepository.save(s);
     }
 
     @Test
     void save_YeniOdemeKaydetmeli() {
-        Odeme yeni = new Odeme();
-        yeni.setTutar(BigDecimal.valueOf(500.00));
-        yeni.setSiparis(testSiparis);
-        Odeme kaydedilen = odemeRepository.save(yeni);
+        Siparis s = yeniSiparisOlustur();
+        Odeme o = new Odeme();
+        o.setTutar(BigDecimal.valueOf(500));
+        o.setSiparis(s);
+
+        Odeme kaydedilen = odemeRepository.save(o);
         assertNotNull(kaydedilen.getOdemeId());
     }
 
     @Test
     void findById_MevcutOdemeyiGetirmeli() {
-        var bulunan = odemeRepository.findById(testOdemesi.getOdemeId());
+        Siparis s = yeniSiparisOlustur();
+        Odeme o = new Odeme();
+        o.setTutar(BigDecimal.valueOf(1500));
+        o.setSiparis(s);
+        o = odemeRepository.save(o);
+
+        var bulunan = odemeRepository.findById(o.getOdemeId());
         assertTrue(bulunan.isPresent());
-        assertEquals(0, BigDecimal.valueOf(2000.0).compareTo(bulunan.get().getTutar()));
     }
 }

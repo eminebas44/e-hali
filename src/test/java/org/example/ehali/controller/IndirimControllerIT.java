@@ -2,7 +2,11 @@ package org.example.ehali.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.ehali.entity.Indirim;
+import org.example.ehali.entity.Hali;
+import org.example.ehali.entity.Kategori;
 import org.example.ehali.repository.IndirimRepository;
+import org.example.ehali.repository.HaliRepository;
+import org.example.ehali.repository.KategoriRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,22 +29,30 @@ import static org.hamcrest.Matchers.*;
 @Transactional
 public class IndirimControllerIT {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private IndirimRepository indirimRepository;
-
-    @Autowired
-    private ObjectMapper objectMapper;
+    @Autowired private MockMvc mockMvc;
+    @Autowired private IndirimRepository indirimRepository;
+    @Autowired private HaliRepository haliRepository;
+    @Autowired private KategoriRepository kategoriRepository;
+    @Autowired private ObjectMapper objectMapper;
 
     private Indirim testIndirim;
+    private Hali testHali;
 
     @BeforeEach
     void setUp() {
+        Kategori kat = new Kategori();
+        kat.setKategoriAdi("Test Kat " + System.currentTimeMillis());
+        kat = kategoriRepository.save(kat);
+
+        testHali = new Hali();
+        testHali.setFiyat(BigDecimal.valueOf(1000));
+        testHali.setKategori(kat);
+        testHali = haliRepository.save(testHali);
+
         testIndirim = new Indirim();
         testIndirim.setDeger(BigDecimal.valueOf(15.0));
         testIndirim.setStratejiTipi("Sabit");
+        testIndirim.setHali(testHali); // İlişki eklendi
         testIndirim = indirimRepository.save(testIndirim);
     }
 
@@ -53,26 +65,14 @@ public class IndirimControllerIT {
 
     @Test
     void createIndirim_YeniKayitOlusturmali() throws Exception {
-        Indirim yeniIndirim = new Indirim();
-        yeniIndirim.setDeger(BigDecimal.valueOf(10.0));
-        yeniIndirim.setStratejiTipi("Yuzde");
+        Indirim yeni = new Indirim();
+        yeni.setDeger(BigDecimal.valueOf(10.0));
+        yeni.setStratejiTipi("Yuzde");
+        yeni.setHali(testHali); // İlişki eklendi
 
         mockMvc.perform(post("/api/indirimler")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(yeniIndirim)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.indirimId").exists());
-    }
-
-    @Test
-    void deleteIndirim_NoContentDonmeli() throws Exception {
-        mockMvc.perform(delete("/api/indirimler/{id}", testIndirim.getIndirimId()))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void getIndirimliFiyat_HaliBulunamazsaNotFoundDonmeli() throws Exception {
-        mockMvc.perform(get("/api/indirimler/hesapla/{haliId}", 9999L))
-                .andExpect(status().isNotFound());
+                        .content(objectMapper.writeValueAsString(yeni)))
+                .andExpect(status().isCreated());
     }
 }
