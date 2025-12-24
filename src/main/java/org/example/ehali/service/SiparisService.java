@@ -3,7 +3,6 @@ package org.example.ehali.service;
 import org.example.ehali.entity.Siparis;
 import org.example.ehali.repository.SiparisRepository;
 import org.springframework.stereotype.Service;
-import org.example.ehali.entity.state.SiparisDurumu;
 
 import java.util.List;
 import java.util.Optional;

@@ -2,7 +2,6 @@ package org.example.ehali.entity;
 
 import jakarta.persistence.*;
 import org.example.ehali.entity.state.BeklemedeDurumu;
-import org.example.ehali.entity.state.SiparisDurumu;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
