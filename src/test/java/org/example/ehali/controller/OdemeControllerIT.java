@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false) // Güvenlik filtrelerini kapatır
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @Transactional
 public class OdemeControllerIT {
@@ -34,19 +34,22 @@ public class OdemeControllerIT {
 
     @BeforeEach
     void setUp() {
+        // 1. Kullanıcı Oluştur
         Kullanici k = new Kullanici();
         k.setAd("Test"); k.setSoyad("User");
         k.setEmail("pay" + System.nanoTime() + "@test.com");
         k.setSifre("123"); k.setRol(Rol.MUSTERI);
         k = kullaniciRepository.save(k);
 
+        // 2. Müşteri Oluştur
         Musteri m = new Musteri();
         m.setKullanici(k);
         m = musteriRepository.save(m);
 
+        // 3. Sipariş Oluştur
         setupSiparis = new Siparis();
         setupSiparis.setMusteri(m);
-        setupSiparis.setToplamTutar(BigDecimal.valueOf(2000));
+        setupSiparis.setToplamTutar(BigDecimal.valueOf(100.00)); // Tutar eklendi
         setupSiparis = siparisRepository.save(setupSiparis);
     }
 
@@ -54,16 +57,13 @@ public class OdemeControllerIT {
     void createOdeme_YeniOdemeOlusturmali() throws Exception {
         Odeme yeni = new Odeme();
         yeni.setTutar(BigDecimal.valueOf(100.00));
-
-        // Sadece ID'si olan temiz bir Siparis nesnesi gönderiyoruz
-        // ki Jackson yetki (Authority) hatası vermesin
-        Siparis gonderilecekSiparis = new Siparis();
-        gonderilecekSiparis.setSiparisId(setupSiparis.getSiparisId());
-        yeni.setSiparis(gonderilecekSiparis);
+        yeni.setSiparis(setupSiparis); // Skeleton yerine tam nesne gönderiyoruz
+        // Eğer veritabanında odeme_tipi kolonu @NotNull ise burayı doldurmalısın:
+        // yeni.setOdemeTipi("KREDI_KARTI"); 
 
         mockMvc.perform(post("/api/odemeler")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(yeni)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(yeni)))
                 .andExpect(status().isCreated());
     }
 }
