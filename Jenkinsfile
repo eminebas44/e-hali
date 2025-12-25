@@ -33,13 +33,18 @@ pipeline {
             steps {
                 bat 'mvn verify -DskipUnitTests -Dtest=!org.example.ehali.selenium.**'
             }
+            post {
+                always {
+                    junit '**/target/failsafe-reports/*.xml'
+                }
+            }
         }
 
         stage('5- Docker Run') {
             steps {
                 bat 'docker-compose down'
                 bat 'docker-compose up --build -d'
-                bat 'timeout /t 45'
+                bat 'ping -n 45 127.0.0.1 > nul'
             }
         }
 
