@@ -75,5 +75,16 @@ pipeline {
                 }
             }
         }
+
+        stage('6.4- Selenium: Ipek Koleksiyonu') {
+            steps {
+                bat 'mvn test -Dtest=IpekKoleksiyonuDogrulama'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.IpekKoleksiyonuDogrulama.xml'
+                }
+            }
+        }
     }
 }
