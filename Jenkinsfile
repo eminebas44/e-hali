@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-        stage('6.1- Selenium: Kullanici Kayit Testi') {
+        stage('6.1- Selenium: Kayit Testi') {
             steps {
                 bat 'mvn test -Dtest=KullaniciKayitTest'
             }
@@ -54,13 +54,24 @@ pipeline {
             }
         }
 
-        stage('6.2- Selenium: Sistem Hazirlik Testi') {
+        stage('6.2- Selenium: Hazirlik Testi') {
             steps {
                 bat 'mvn test -Dtest=SistemHazirlikTest'
             }
             post {
                 always {
                     junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.SistemHazirlikTest.xml'
+                }
+            }
+        }
+
+        stage('6.3- Selenium: Sayfa Icerik Testi') {
+            steps {
+                bat 'mvn test -Dtest=SayfaGezintiTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.SayfaGezintiTest.xml'
                 }
             }
         }
