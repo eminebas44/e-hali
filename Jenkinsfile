@@ -33,11 +33,6 @@ pipeline {
             steps {
                 bat 'mvn verify -DskipUnitTests -Dtest=!org.example.ehali.selenium.**'
             }
-            post {
-                always {
-                    junit '**/target/failsafe-reports/*.xml'
-                }
-            }
         }
 
         stage('5- Docker Run') {
@@ -48,13 +43,24 @@ pipeline {
             }
         }
 
-        stage('6- Selenium: Kullanici Kayit Testi') {
+        stage('6.1- Selenium: Kullanici Kayit Testi') {
             steps {
                 bat 'mvn test -Dtest=KullaniciKayitTest'
             }
             post {
                 always {
                     junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KullaniciKayitTest.xml'
+                }
+            }
+        }
+
+        stage('6.2- Selenium: Sistem Hazirlik Testi') {
+            steps {
+                bat 'mvn test -Dtest=SistemHazirlikTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.SistemHazirlikTest.xml'
                 }
             }
         }
