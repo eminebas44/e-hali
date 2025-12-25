@@ -1,19 +1,23 @@
 pipeline {
     agent any
+
     tools {
         maven 'Maven3'
     }
+
     stages {
         stage('1- Checkout') {
             steps {
                 checkout scm
             }
         }
+
         stage('2- Build') {
             steps {
                 bat 'mvn clean package -DskipTests'
             }
         }
+
         stage('3- Unit Tests') {
             steps {
                 bat 'mvn test -Dtest=!org.example.ehali.selenium.**'
@@ -24,11 +28,13 @@ pipeline {
                 }
             }
         }
+
         stage('4- Integration Tests') {
             steps {
-                bat 'mvn verify -DskipUnitTests'
+                bat 'mvn verify -DskipUnitTests -Dtest=!org.example.ehali.selenium.**'
             }
         }
+
         stage('5- Docker Run') {
             steps {
                 bat 'docker-compose down'
@@ -36,6 +42,7 @@ pipeline {
                 bat 'timeout /t 45'
             }
         }
+
         stage('6- Selenium: Kullanici Kayit Testi') {
             steps {
                 bat 'mvn test -Dtest=KullaniciKayitTest'
