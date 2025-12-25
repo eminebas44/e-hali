@@ -44,12 +44,18 @@ pipeline {
             steps {
                 bat 'docker-compose down'
                 bat 'docker-compose up --build -d'
+                bat 'timeout /t 45'
             }
         }
 
-        stage('6- Selenium System Tests') {
+        stage('6- Selenium: Kullanici Kayit Testi') {
             steps {
-                echo 'Selenium testleri bu asamada kosulacak'
+                bat 'mvn test -Dtest=KullaniciKayitTest -DfailIfNoTests=false'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KullaniciKayitTest.xml'
+                }
             }
         }
     }

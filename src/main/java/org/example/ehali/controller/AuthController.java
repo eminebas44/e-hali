@@ -19,7 +19,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:5174") // CORS Hatasını çözen kritik satır
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;

@@ -1,4 +1,4 @@
-package org.example.ehali.guvenlik; // Paket ismini dosyayı oluşturduğun yere göre ayarla
+package org.example.ehali.guvenlik;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -28,6 +28,13 @@ public class JwtKimlikDogrulamaFiltresi extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
+        
+        // OPTIONS isteklerini direkt geçir (CORS için önemli)
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;

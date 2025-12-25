@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   ehali-db:
     image: postgres:15
@@ -10,8 +8,6 @@ services:
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
-    volumes:
-      - ehali-db-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d ehali"]
       interval: 5s
@@ -25,15 +21,12 @@ services:
       ehali-db:
         condition: service_healthy
     ports:
-      - "8180:8383"
+      - "8383:8383"
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://ehali-db:5432/ehali
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
-
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.PostgreSQLDialect
-      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
-
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SERVER_PORT: 8383
     restart: unless-stopped
