@@ -34,48 +34,32 @@ public class OdemeControllerIT {
 
     @BeforeEach
     void setUp() {
-        // 1. Kullanıcı Oluştur
         Kullanici k = new Kullanici();
         k.setAd("Test"); k.setSoyad("User");
         k.setEmail("pay" + System.nanoTime() + "@test.com");
         k.setSifre("123"); k.setRol(Rol.MUSTERI);
         k = kullaniciRepository.save(k);
 
-        // 2. Müşteri Oluştur
         Musteri m = new Musteri();
         m.setKullanici(k);
         m = musteriRepository.save(m);
 
-        // 3. Sipariş Oluştur
         setupSiparis = new Siparis();
         setupSiparis.setMusteri(m);
-<<<<<<< HEAD
-        setupSiparis.setToplamTutar(BigDecimal.valueOf(100.00)); // Tutar eklendi
-=======
-        // Sipariş tutarını 100 TL olarak ayarladık
-        setupSiparis.setToplamTutar(BigDecimal.valueOf(100.00)); 
->>>>>>> 824fc7a86aa95f9fd0492985307d15dccf09f0ca
+        setupSiparis.setToplamTutar(BigDecimal.valueOf(100.00));
         setupSiparis = siparisRepository.save(setupSiparis);
     }
 
     @Test
     void createOdeme_YeniOdemeOlusturmali() throws Exception {
         Odeme yeni = new Odeme();
-        // Ödeme tutarı ile sipariş tutarı artık eşleşiyor (100 TL)
         yeni.setTutar(BigDecimal.valueOf(100.00));
-<<<<<<< HEAD
-        yeni.setSiparis(setupSiparis); // Skeleton yerine tam nesne gönderiyoruz
-        // Eğer veritabanında odeme_tipi kolonu @NotNull ise burayı doldurmalısın:
-        // yeni.setOdemeTipi("KREDI_KARTI");
-=======
         yeni.setSiparis(setupSiparis);
-        // Veritabanındaki odeme_tipi kolonu için değer atıyoruz
-        yeni.setOdemeTipi("KREDI_KARTI"); 
->>>>>>> 824fc7a86aa95f9fd0492985307d15dccf09f0ca
+        yeni.setOdemeTipi("KREDI_KARTI");
 
         mockMvc.perform(post("/api/odemeler")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(yeni)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(yeni)))
                 .andExpect(status().isCreated());
     }
 }
