@@ -86,5 +86,16 @@ pipeline {
                 }
             }
         }
+
+        stage('6.5- Selenium: Navigasyon Kontrolü') {
+            steps {
+                bat 'mvn test -Dtest=KullaniciNavigasyonTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KullaniciNavigasyonTest.xml'
+                }
+            }
+        }
     }
 }
