@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-        stage('6.1- Selenium: Kayit Testi') {
+        stage('6.1- Selenium: Kullanıcı Kayıt') {
             steps {
                 bat 'mvn test -Dtest=KullaniciKayitTest'
             }
@@ -54,7 +54,7 @@ pipeline {
             }
         }
 
-        stage('6.2- Selenium: Hazirlik Testi') {
+        stage('6.2- Selenium: Sistem Hazırlık') {
             steps {
                 bat 'mvn test -Dtest=SistemHazirlikTest'
             }
@@ -65,7 +65,7 @@ pipeline {
             }
         }
 
-        stage('6.3- Selenium: Sayfa Icerik Testi') {
+        stage('6.3- Selenium: Sayfa Gezinti') {
             steps {
                 bat 'mvn test -Dtest=SayfaGezintiTest'
             }
@@ -76,7 +76,7 @@ pipeline {
             }
         }
 
-        stage('6.4- Selenium: Ipek Koleksiyonu') {
+        stage('6.4- Selenium: İpek Koleksiyonu') {
             steps {
                 bat 'mvn test -Dtest=IpekKoleksiyonuDogrulama'
             }
@@ -94,6 +94,61 @@ pipeline {
             post {
                 always {
                     junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KullaniciNavigasyonTest.xml'
+                }
+            }
+        }
+
+        stage('6.6- Selenium: Kayıt Navigasyon') {
+            steps {
+                bat 'mvn test -Dtest=KayitNavigasyonTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KayitNavigasyonTest.xml'
+                }
+            }
+        }
+
+        stage('6.7- Selenium: Kategori Filtreleme') {
+            steps {
+                bat 'mvn test -Dtest=KategoriFiltrelemeTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KategoriFiltrelemeTest.xml'
+                }
+            }
+        }
+
+        stage('6.8- Selenium: Kategori Veri Bütünlüğü') {
+            steps {
+                bat 'mvn test -Dtest=KategoriVeriTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.KategoriVeriTest.xml'
+                }
+            }
+        }
+
+        stage('6.9- Selenium: Giriş Hata Mesajı') {
+            steps {
+                bat 'mvn test -Dtest=GirisHataTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.GirisHataTest.xml'
+                }
+            }
+        }
+
+        stage('6.10- Selenium: Anasayfa Logo') {
+            steps {
+                bat 'mvn test -Dtest=AnasayfaLogoTest'
+            }
+            post {
+                always {
+                    junit '**/target/surefire-reports/TEST-org.example.ehali.selenium.AnasayfaLogoTest.xml'
                 }
             }
         }
